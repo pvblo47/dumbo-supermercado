@@ -59,7 +59,7 @@ Angular 20 y .NET 10 son el stack acordado para este proyecto. PostgreSQL, EF Co
 - Acordar presentaciones vendibles, importación con errores e imágenes y criterios medibles de RF-008 que la fuente no cierra completamente.
 - Desplegar y verificar frontend, API y BD en las tres VM confirmadas, además de su configuración DEV/PROD. Las plantillas no demuestran que esos servicios estén ejecutándose ni que haya aislamiento real entre ambientes.
 - Completar TLS, secretos del servidor, usuarios SQL de ejecución con privilegios adecuados y copias de seguridad antes de considerar la plantilla PROD un despliegue operativo.
-- Completar CD: CI construye y prueba, pero no publica imágenes en Docker Hub ni despliega en Ubuntu todavía.
+- Verificar la primera publicación real en Docker Hub: el CI prepara la publicación de ambas imágenes después de las pruebas, solo en `main` y con `DOCKERHUB_TOKEN`. La configuración y el PR por sí solos no acreditan un push exitoso al registro. El despliegue automático en Ubuntu sigue pendiente; ver [publicación](PUBLICACION_DOCKERHUB.md).
 - Mantener fuera de este repositorio la implementación y publicación del mockup; sirve como referencia visual, no como evidencia de RF implementados en Angular/.NET.
 
 ## Verificación de esta revisión

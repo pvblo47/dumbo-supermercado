@@ -93,7 +93,7 @@ git push
 
 Resolver los conflictos y comprobar la aplicación antes de subir. Si `main` queda por delante de `dev`, sincronizarla mediante PR `main` → `dev`. Las correcciones también entran primero en `dev`.
 
-CI ejecuta `flujo-ramas`, `backend`, `frontend` y `docker`. El primero rechaza PR a `main` cuyo origen no sea `dev` del mismo repositorio. CI todavía no publica imágenes ni despliega en la VM.
+CI ejecuta `flujo-ramas`, `backend`, `frontend` y `docker`. El primero rechaza PR a `main` cuyo origen no sea `dev` del mismo repositorio. Tras las comprobaciones, un push a `main` publica frontend y API en Docker Hub si está configurado `DOCKERHUB_TOKEN`. Los PR y las ramas de trabajo no publican. Preparación y evidencia en [Publicación de imágenes](PUBLICACION_DOCKERHUB.md); la actualización automática de las VM sigue pendiente.
 
 ## DEV y PROD
 

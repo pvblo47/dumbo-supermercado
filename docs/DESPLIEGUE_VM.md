@@ -27,7 +27,7 @@ flowchart LR
 ## Preparación
 
 1. Confirmar IP privadas, conectividad entre las tres VM y acceso de administración. No se han fijado direcciones reales ni se ha accedido a servidores en esta tarea.
-2. Construir y publicar imágenes versionadas de frontend y API con los Dockerfiles del repositorio. La publicación en el registro y el CD todavía están pendientes.
+2. Publicar imágenes versionadas de frontend y API mediante el [CI preparado para Docker Hub](PUBLICACION_DOCKERHUB.md), con su token configurado y el PR integrado en `main`. Verificar ambas imágenes en el registro antes de usarlas; el CD a las VM sigue pendiente.
 3. En cada VM, copiar solo su carpeta de `deploy/vm-*`, renombrar `.env.example` a `.env` y completar los valores vacíos. No compartir archivos con claves en Git.
 
 | Archivo de configuración | Valores necesarios |
