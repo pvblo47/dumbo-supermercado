@@ -1,5 +1,7 @@
 # Arquitectura de la base
 
+El diseño completo C1/C2 y su draw.io están en [Arquitectura C4](ARQUITECTURA_C4.md). Este archivo explica la estructura actual del código; [ERS.md](ERS.md) conserva la especificación (5).
+
 Angular es la presentación. Los controladores HTTP de la API invocan casos de uso de Application. Domain conserva entidades/reglas. Infrastructure implementa persistencia e integraciones y se registra desde la composición de la API.
 
 ```mermaid
