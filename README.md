@@ -1,130 +1,99 @@
 # Dumbo Supermercados
 
-Base del sistema real del Proyecto Integrador de Plataformas. El mockup sigue en su repositorio separado y sirve como referencia visual.
+Proyecto del equipo: **Angular 20 + .NET 10 + PostgreSQL**. Esta es la base de desarrollo; las funcionalidades del supermercado se incorporarán por tareas.
 
-**Estado inicial:** Angular 20 y API ASP.NET Core 10 con controladores, capas y comprobación de conectividad. EF Core/Npgsql está preparado para PostgreSQL. Aún no hay entidades ni migraciones de negocio, autenticación, pagos o correo implementados.
+## Probar todo desde una terminal
 
-## Estructura
+Necesitas **Git y Docker Desktop abierto**. Para esta opción, Node y .NET se ejecutan dentro de Docker.
 
-```text
-frontend/                      Angular 20, routing, SCSS y cliente HTTP
-backend/Dumbo.sln               Solución .NET 10
-backend/src/Dumbo.Api/          Controladores y composición de dependencias
-backend/src/Dumbo.Application/  Casos de uso, contratos y abstracciones
-backend/src/Dumbo.Domain/       Entidades y reglas independientes
-backend/src/Dumbo.Infrastructure/ EF Core, repositorios e integraciones
-backend/tests/Dumbo.Api.Tests/  Pruebas HTTP de integración
-deploy/nginx/                  Angular y proxy /api
-docs/                          Arquitectura, contratos y próximos pasos
-.github/workflows/ci.yml        Compilación, pruebas y construcción de imágenes
-```
-
-Las cuatro capas del backend ejecutan **una API**. No son cuatro microservicios ni cuatro contenedores Docker.
-
-## Requisitos
-
-- SDK .NET 10 estable. `global.json` exige 10.0.100 como base y permite bandas posteriores de .NET 10.
-- Node.js 24.15.0 y npm 11; `.nvmrc` conserva la versión del equipo.
-- Git y permisos de escritura en este repositorio para colaborar.
-- Docker con Compose para levantar PostgreSQL o la aplicación completa.
-
-## Levantar todo con Docker
-
-Desde la raíz del repositorio, copiar `.env.example` a `.env`:
+La primera vez:
 
 ```powershell
+git clone https://github.com/pvblo47/dumbo-supermercado.git
+cd dumbo-supermercado
 Copy-Item .env.example .env
 ```
 
-En Linux/macOS usar `cp .env.example .env`. Editar `POSTGRES_PASSWORD` con una clave solo de desarrollo y ejecutar:
+En Linux/macOS, usar `cp .env.example .env`. Abrir `.env` y cambiar `POSTGRES_PASSWORD` por una clave local de desarrollo. Este archivo no se sube a Git.
+
+Desde esa misma terminal:
 
 ```sh
 docker compose up --build -d
-docker compose ps
 ```
 
-- Interfaz: http://localhost:8080
-- API: http://localhost:5080/api/health
-- Estado de conexión a PostgreSQL: http://localhost:5080/api/health/ready
-- OpenAPI en Development: http://localhost:5080/openapi/v1.json
+**Abrir la aplicación: http://localhost:8080**
 
-Nginx sirve Angular y dirige `/api` a la API. No se necesitan reglas CORS permisivas. Los puertos están ligados a loopback para uso local; el despliegue accesible del servidor se acordará aparte con HTTPS y las indicaciones del profesor.
+Este comando levanta frontend, API y base de datos en segundo plano. Puedes seguir usando la misma terminal o cerrarla; los servicios continúan funcionando mientras Docker esté abierto. La primera construcción puede tardar varios minutos.
 
-`docker compose down` conserva los datos. No usar `down -v` para reiniciar una aplicación que contenga datos que se quieran conservar.
-
-## Desarrollar Angular y .NET por separado
-
-Terminal 1, desde la raíz:
+Para detenerlos y conservar los datos:
 
 ```sh
-dotnet restore backend/Dumbo.sln --locked-mode
-dotnet run --project backend/src/Dumbo.Api --launch-profile http
+docker compose down
 ```
 
-Terminal 2:
+Si cambiaste código, repetir `docker compose up --build -d` para reconstruir lo modificado. Para trabajar con el servidor de desarrollo de cada parte, usar la opción correspondiente de abajo.
+
+## Trabajar en tu parte
+
+Los comandos siguientes parten de la raíz del repositorio. Cada integrante puede iniciar solo la parte que está desarrollando.
+
+### Frontend
+
+Necesitas **Node.js 24 y npm 11**.
 
 ```sh
+git switch frontend
 cd frontend
 npm ci
 npm start
 ```
 
-Abrir http://localhost:4200. El proxy de desarrollo dirige `/api` a `127.0.0.1:5080`. Angular puede iniciar antes de la API: muestra Sin conexión y permite comprobar de nuevo.
+Abrir http://localhost:4200. `npm ci` instala las dependencias; repetirlo al cambiar el archivo de dependencias. Angular muestra el estado de la API: para probar el flujo integrado, la API debe estar ejecutándose también.
 
-Para comprobar PostgreSQL desde la API local:
+### Backend
 
-1. Preparar `.env` y ejecutar `docker compose up -d db`.
-2. Guardar la conexión en secretos de desarrollo, usando la clave elegida en `.env`:
-
-```sh
-dotnet user-secrets set "ConnectionStrings:Dumbo" "Host=localhost;Port=5432;Database=dumbo;Username=dumbo;Password=TU_CLAVE_DEV;Timeout=3;Command Timeout=5" --project backend/src/Dumbo.Api
-```
-
-3. Reiniciar la API. Si cambiaste usuario, base o puerto en `.env`, reflejarlos también en la conexión local.
-
-Sin PostgreSQL, la API responde correctamente a `/api/health`; `/api/health/ready` devuelve un error controlado 503. No se crean tablas automáticamente al iniciar.
-
-## Modelo y migraciones
-
-Antes de la primera migración, Gustavo/Juan y backend deben revisar el modelo y acordar Identity, persistencia del carrito, estados de reservas e intentos de pago. El SQL de referencia debe conciliarse con EF; evitar mantener dos fuentes de esquema divergentes.
-
-Cuando el modelo esté acordado:
+Necesitas el **SDK .NET 10**.
 
 ```sh
-dotnet tool restore
-dotnet ef migrations add Inicial --project backend/src/Dumbo.Infrastructure --startup-project backend/src/Dumbo.Api --output-dir Persistence/Migrations
-dotnet ef database update --project backend/src/Dumbo.Infrastructure --startup-project backend/src/Dumbo.Api
+git switch backend
+dotnet run --project backend/src/Dumbo.Api --launch-profile http
 ```
 
-Revisar y versionar la migración antes de aplicarla a un ambiente compartido. Ver [arquitectura](docs/ARQUITECTURA.md) y [contratos](docs/CONTRATOS_API.md).
+Comprobar la API en http://localhost:5080/api/health. Para conectarla a PostgreSQL local, seguir la [configuración de la base de datos](docs/GUIA_TECNICA.md#desarrollar-angular-y-net-por-separado).
 
-## Comprobaciones
+El arranque local de Angular y .NET usa una terminal por proceso cuando quieres desarrollar ambos a la vez. Para probar todo junto desde una terminal, usa Docker como se indica arriba. Detén los servicios Docker antes de cambiar al arranque local para evitar ocupar el mismo puerto de la API.
 
-```sh
-dotnet test backend/Dumbo.sln --configuration Release
-cd frontend
-npm ci
-npm run build
-npm run test:ci
+## Cómo subimos los cambios
+
+```mermaid
+flowchart LR
+    F[frontend] -->|Pull request| D[dev: integración]
+    B[backend] -->|Pull request| D
+    D -->|Pull request y revisión| M[main: estable]
 ```
 
-Los tests Angular usan Chrome Headless; se necesita Chrome/Chromium instalado. La prueba .NET con PostgreSQL real se omite si falta `DUMBO_TEST_DATABASE`; CI proporciona una base temporal para ejecutarla. Las demás pruebas no requieren base de datos.
+1. **Trabaja en `frontend` o `backend`**. Antes de comenzar, actualiza tu rama con `git pull --ff-only`.
+2. Guarda y sube los archivos de tu tarea. Ejemplo para frontend, desde la raíz:
 
-Los archivos `package-lock.json` y `packages.lock.json` quedan versionados. Usar `npm ci`; al cambiar paquetes .NET, restaurar y revisar también los cambios de los locks.
+   ```sh
+   git add frontend/
+   git commit -m "feat: describir la tarea"
+   git push origin frontend
+   ```
 
-## Trabajo en equipo
+3. En GitHub, abre un **pull request hacia `dev`**. Otro integrante revisa los cambios y se comprueba CI.
+4. Cuando lo integrado esté listo, abre un **pull request de `dev` hacia `main`**.
 
-- `main`: base estable e integración de entregas revisadas.
-- `dev`: integración de trabajo en curso.
-- Una rama corta por tarjeta: `feature/h2-05-modelo-datos`, por ejemplo.
-- Abrir PR hacia `dev`; pedir revisión de otro integrante. Integrar después `dev` en `main` con revisión.
-- CI comprueba frontend, backend y construcción de imágenes. **No publica en Docker Hub ni despliega en la VM todavía.** Esas tareas requieren cuentas, secretos y acceso al servidor acordados.
-- El propietario debe invitar a los integrantes en Settings → Collaborators y configurar la protección de ramas. Crear ramas y un workflow no activa por sí solo una exigencia de aprobación.
+Usar **Create a merge commit** y conservar las cuatro ramas. El botón de GitHub puede proponer `main` como destino: cambiarlo a `dev` cuando se integra frontend o backend.
 
-Primeros pasos: [ARRANQUE_EQUIPO.md](docs/ARRANQUE_EQUIPO.md). Estado de las verificaciones: [VERIFICACION_INICIAL.md](docs/VERIFICACION_INICIAL.md).
+Las protecciones se activan en la configuración de GitHub; guardar su archivo en el repositorio no las activa. El detalle de las reglas y cómo sincronizar ramas está en la [guía técnica](docs/GUIA_TECNICA.md#trabajo-en-equipo).
 
-## Ambientes
+## Más información
 
-Usar diferentes archivos de configuración, contraseñas, puertos y nombres de proyecto Compose para DEV/PROD. Los volúmenes están ligados al nombre del proyecto: `dumbo-dev` y `dumbo-prod` no comparten automáticamente `postgres-data`. La asignación de cada VM sigue pendiente de la indicación del profesor.
+- [Guía técnica](docs/GUIA_TECNICA.md): base de datos, migraciones, pruebas, ramas y configuración.
+- [Arquitectura en capas](docs/ARQUITECTURA.md).
+- [Contratos de la API](docs/CONTRATOS_API.md).
+- [Primeras tareas del equipo](docs/ARRANQUE_EQUIPO.md).
 
-Webpay Plus, Resend, archivos de imágenes persistentes y el worker/base de reportes permanecen en la arquitectura objetivo; no se presentan como implementados en esta base.
+CI ya compila, prueba y construye las imágenes. La publicación de imágenes y el despliegue automático en la VM todavía deben configurarse.

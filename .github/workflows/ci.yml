@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, frontend, backend]
   pull_request:
     branches: [main, dev]
 
@@ -14,8 +14,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  flujo-ramas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validar el origen del pull request
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          HEAD_BRANCH: ${{ github.head_ref }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          CURRENT_REPOSITORY: ${{ github.repository }}
+        run: |
+          if [[ "$EVENT_NAME" != "pull_request" ]]; then
+            echo "Push de trabajo: la integración se valida al abrir el pull request."
+            exit 0
+          fi
+          if [[ "$BASE_BRANCH" == "main" ]] && { [[ "$HEAD_BRANCH" != "dev" ]] || [[ "$HEAD_REPOSITORY" != "$CURRENT_REPOSITORY" ]]; }; then
+            echo "::error::Los pull requests a main deben venir de dev de este repositorio. Integra primero tu trabajo en dev."
+            exit 1
+          fi
+          echo "Origen del pull request permitido."
+
   backend:
     runs-on: ubuntu-latest
+    needs: flujo-ramas
     services:
       postgres:
         image: postgres:17-alpine
@@ -41,6 +63,7 @@ jobs:
 
   frontend:
     runs-on: ubuntu-latest
+    needs: flujo-ramas
     defaults:
       run:
         working-directory: frontend
