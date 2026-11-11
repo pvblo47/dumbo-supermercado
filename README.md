@@ -25,7 +25,7 @@ Las cuatro capas del backend ejecutan **una API**. No son cuatro microservicios 
 
 - SDK .NET 10 estable. `global.json` exige 10.0.100 como base y permite bandas posteriores de .NET 10.
 - Node.js 24.15.0 y npm 11; `.nvmrc` conserva la versión del equipo.
-- Git y acceso a este repositorio privado.
+- Git y permisos de escritura en este repositorio para colaborar.
 - Docker con Compose para levantar PostgreSQL o la aplicación completa.
 
 ## Levantar todo con Docker

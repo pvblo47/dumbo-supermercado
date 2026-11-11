@@ -17,15 +17,16 @@ Fecha: 10 de noviembre de 2026. Este registro corresponde a la preparación del 
 | Proxy de desarrollo de Angular | `/api/health` consultado a través del puerto 4200 respondió `ok`. |
 | Verificación en navegador | Angular mostró API conectada y PostgreSQL sin conexión, coherente con los servicios ejecutados. |
 | Validación del archivo Compose | `docker compose --env-file .env.example config --quiet` completado correctamente. |
+| CI de GitHub Actions, commit `dbbac20` en `main` | Backend, frontend y construcción de ambas imágenes Docker completados correctamente. [Ejecución verificada](https://github.com/pvblo47/dumbo-supermercado/actions/runs/42932920911). |
 
 El aviso de EF Core sobre ausencia de configuraciones de entidades es esperado: el modelo de negocio todavía debe acordarse e incorporarse.
 
 ## Límites de esta verificación
 
-- Docker está instalado, pero su motor no estaba ejecutándose. No se construyeron imágenes ni se levantó Compose localmente.
+- Docker está instalado, pero su motor no estaba ejecutándose. Las imágenes se construyeron correctamente en CI; no se levantó Compose localmente ni se verificó el conjunto completo de contenedores en ejecución.
 - La base no contiene tablas, migraciones de negocio ni datos iniciales.
 - Autenticación, permisos, catálogo, carrito, Webpay, Resend, importación y reportes son trabajo posterior.
-- La configuración de GitHub Actions debe confirmarse con el resultado de sus ejecuciones después de subir el repositorio. La existencia del workflow no demuestra que haya pasado.
+- La ejecución de CI verificada corresponde a la base `dbbac20`. El job backend proporciona PostgreSQL temporal y ejecuta también la prueba de disponibilidad positiva de la BD. Los siguientes cambios deben mantener sus comprobaciones en verde.
 - No se configuraron credenciales de despliegue, Docker Hub, acceso a las VM ni protección de ramas.
 
 ## Dependencias
@@ -37,7 +38,7 @@ El aviso de EF Core sobre ausencia de configuraciones de entidades es esperado: 
 
 ## Siguiente validación compartida
 
-1. Revisar los resultados de CI en GitHub Actions: backend, frontend e imágenes Docker.
+1. Mantener los resultados de CI en verde al incorporar las tareas del equipo.
 2. Con Docker iniciado, levantar Compose y comprobar `/api/health/ready` con PostgreSQL disponible.
 3. Acordar el modelo y la estrategia de cuentas antes de generar la primera migración.
 4. Validar en la VM el acceso y la separación de ambientes según las indicaciones del profesor.
