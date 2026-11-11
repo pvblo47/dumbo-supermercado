@@ -7,7 +7,7 @@ Esta lista organiza el trabajo por categoría. Las tareas se asignan en Trello; 
 | Base de datos | Acordar entidades, correo único y estados; añadir mapeos EF, migración y datos de ejemplo. | Una base nueva se crea con la migración y respeta las restricciones. |
 | Backend | Acordar DTO, implementar casos de uso y permisos; conectar persistencia e integraciones. | Solicitudes HTTP, validaciones y pruebas de permisos. |
 | Frontend | Crear las pantallas acordadas y conectarlas a la API; incluir carga, errores y confirmaciones. | Flujo navegable con datos recibidos del backend. |
-| Infraestructura | Verificar Compose en Ubuntu y completar publicación de imágenes y despliegue automático. | Cambio revisado que llegue al servidor por CI/CD. |
+| Infraestructura | Configurar las tres VM separadas y completar publicación de imágenes y despliegue automático. | Cambio revisado que llegue a frontend, backend y BD en sus respectivas VM. |
 | QA y documentación | Ejecutar criterios del ERS y actualizar contratos, evidencias y estados de requisitos. | Casos reproducibles y distinción entre completo, parcial y pendiente. |
 
 ## Primera integración propuesta

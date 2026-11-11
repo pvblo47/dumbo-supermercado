@@ -97,6 +97,8 @@ CI ejecuta `flujo-ramas`, `backend`, `frontend` y `docker`. El primero rechaza P
 
 ## DEV y PROD
 
+La entrega requiere tres VM distintas, descritas en [Despliegue en tres VM](DESPLIEGUE_VM.md). Las plantillas raíz de la tabla siguiente permiten comprobar ambientes en un equipo; no reemplazan ese reparto.
+
 | Propiedad | DEV | PROD |
 | --- | --- | --- |
 | Plantilla | `.env.example` | `.env.prod.example` |
@@ -115,6 +117,6 @@ docker compose --env-file .env.prod up --build -d
 
 Elegir el comando del ambiente requerido. Los nombres de proyecto generan redes y volúmenes distintos: `dumbo-dev_default` / `dumbo-prod_default` y `dumbo-dev_postgres-data` / `dumbo-prod_postgres-data`. `docker compose down` conserva los datos; la opción `-v` elimina los volúmenes.
 
-Los puertos están ligados a `127.0.0.1`. PROD es una plantilla, no un despliegue operativo: faltan verificar VM, HTTPS, secretos, usuarios SQL con permisos adecuados, respaldos y CD. La asignación de servicios a las VM sigue pendiente de la indicación del profesor.
+Los puertos del Compose local están ligados a `127.0.0.1`. Para las VM se usan las configuraciones `deploy/vm-*` y sus direcciones de red privadas. El reparto frontend/backend/BD está confirmado; siguen pendientes las IP, conectividad real, HTTPS, secretos, usuarios SQL de ejecución, respaldos y CD.
 
 La separación DEV/PROD no crea la base analítica de RF-008. Esa base y su worker pertenecen al desarrollo posterior.

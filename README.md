@@ -2,6 +2,8 @@
 
 Sistema del equipo con **Angular 20, .NET 10 y PostgreSQL**. El proyecto tiene una base de conexión y arquitectura; los módulos del supermercado todavía se desarrollan por tareas.
 
+El arranque de esta página es **local**. La entrega se despliega en **tres VM distintas: frontend, backend y base de datos**; ver la [guía de despliegue](docs/DESPLIEGUE_VM.md).
+
 ## Primera vez
 
 Necesitas Git y acceso al repositorio:
@@ -100,6 +102,7 @@ Usar **Create a merge commit** y conservar las ramas. Las protecciones se activa
 | --- | --- |
 | [Guía técnica](docs/GUIA_TECNICA.md) | Base de datos, migraciones, pruebas y DEV/PROD. |
 | [Arquitectura](docs/ARQUITECTURA.md) | MVC, responsabilidades y dependencias entre capas. |
+| [Despliegue en tres VM](docs/DESPLIEGUE_VM.md) | Reparto de servicios, conexiones y configuración por máquina. |
 | [Estado frente al ERS](docs/VALIDACION_ERS.md) | Cobertura actual y requisitos pendientes. |
 | [Contratos de la API](docs/CONTRATOS_API.md) | Rutas disponibles y acuerdos entre frontend y backend. |
 | [Próximos pasos](docs/ARRANQUE_EQUIPO.md) | Trabajo por área y evidencias para revisar. |

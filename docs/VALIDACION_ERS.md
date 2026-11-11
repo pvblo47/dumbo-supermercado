@@ -8,6 +8,8 @@ Se contrastó `ERS_Dumbo_Hito2_Revision_2026-11-04.docx`, basado en el ERS final
 
 La fuente identifica los detalles D05, D06 y D07 como propuestas del equipo. La revisión del código no convierte esas propuestas ni la interpretación de MVC en aprobación del profesor. No se modificó el documento fuente.
 
+El 11 de noviembre se confirmó además el reparto de despliegue: **frontend en una VM, backend en otra y PostgreSQL en una tercera**. Esta definición actual reemplaza el estado anterior de reparto pendiente y se incorpora a las configuraciones de despliegue.
+
 Angular 20 y .NET 10 son el stack acordado para este proyecto. PostgreSQL, EF Core/Npgsql y Nginx son decisiones técnicas de implementación; no se presentan como obligaciones genéricas de cualquier arquitectura MVC.
 
 ## Comprobado en la estructura
@@ -18,6 +20,7 @@ Angular 20 y .NET 10 son el stack acordado para este proyecto. PostgreSQL, EF Co
 - Infrastructure referencia Application y Domain y contiene EF Core/Npgsql. La referencia directa a Domain hace explícita la dependencia para mapear las futuras entidades; antes era transitiva por Application.
 - Api referencia Application e Infrastructure para componer servicios. Las cuatro capas ejecutan una sola API, no cuatro microservicios.
 - Compose define tres servicios separados: Angular/Nginx, API y PostgreSQL transaccional.
+- `deploy/vm-frontend`, `deploy/vm-backend` y `deploy/vm-db` preparan un único servicio por VM. Nginx permite configurar la dirección privada del backend mediante `API_UPSTREAM`; la API recibe la conexión a la VM de PostgreSQL.
 - `.env.example` y `.env.prod.example` preparan DEV/PROD con configuración, puertos, redes y volúmenes distintos. Los archivos con claves reales están ignorados por Git.
 - No hay campos RUT en contratos o entidades de negocio: todavía no existen esos contratos o entidades. La ausencia del campo en una base vacía no acredita RF-002.
 
@@ -35,7 +38,7 @@ Angular 20 y .NET 10 son el stack acordado para este proyecto. PostgreSQL, EF Co
 | RF-008: reportes consolidados | Pendiente. No hay worker, limpieza/consolidación ni base analítica. | Worker y almacenamiento de reportes separados de las transacciones, según C4 objetivo. |
 | NF01: interfaz y doble confirmación | Pendiente para los flujos de negocio. La pantalla técnica solo muestra conectividad. | Angular presenta revisión y confirmación final; cancelar no persiste cambios. El backend revalida las reglas. |
 | NF02: seguridad por roles | Pendiente. La API no implementa aún autorización para acciones de negocio ni sesiones reales. | Api/Application verifican rol, actor, propietario y estado; Infrastructure materializa identidad y persistencia. |
-| NF03: MVC en capas y DEV/PROD | Estructura de capas preparada. Configuraciones de ambientes preparadas; despliegue y aislamiento en ejecución pendientes. | Angular como vista; Api como controladores; Application/Domain como modelo y casos de uso; Infrastructure como acceso e integraciones. |
+| NF03: MVC en capas y DEV/PROD | Capas y configuraciones por VM preparadas. Despliegue distribuido y aislamiento de ambientes en ejecución pendientes. | Angular como vista; Api como controladores; Application/Domain como modelo y casos de uso; Infrastructure como acceso e integraciones. Frontend, API y BD se despliegan en VM distintas. |
 
 ## Reglas que deben conservar los siguientes desarrollos
 
@@ -54,7 +57,7 @@ Angular 20 y .NET 10 son el stack acordado para este proyecto. PostgreSQL, EF Co
 
 - Acordar Identity/mecanismo de sesión, modelo inicial y migraciones. Domain permanece preparado y vacío; no se generaron tablas para dar por cerrados requisitos.
 - Acordar presentaciones vendibles, importación con errores e imágenes y criterios medibles de RF-008 que la fuente no cierra completamente.
-- Desplegar y verificar DEV/PROD: las plantillas no demuestran que ambos ambientes estén ejecutándose. Confirmar el reparto de las VM con el profesor.
+- Desplegar y verificar frontend, API y BD en las tres VM confirmadas, además de su configuración DEV/PROD. Las plantillas no demuestran que esos servicios estén ejecutándose ni que haya aislamiento real entre ambientes.
 - Completar TLS, secretos del servidor, usuarios SQL de ejecución con privilegios adecuados y copias de seguridad antes de considerar la plantilla PROD un despliegue operativo.
 - Completar CD: CI construye y prueba, pero no publica imágenes en Docker Hub ni despliega en Ubuntu todavía.
 - Mantener fuera de este repositorio la implementación y publicación del mockup; sirve como referencia visual, no como evidencia de RF implementados en Angular/.NET.

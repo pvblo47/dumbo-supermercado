@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-dumbo}
+      POSTGRES_USER: ${POSTGRES_USER:-dumbo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Define una clave de PostgreSQL para esta VM}
+    ports:
+      - "${DB_BIND_ADDRESS:?Define la IP privada de la VM de BD}:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  postgres-data:

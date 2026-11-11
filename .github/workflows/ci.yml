@@ -85,3 +85,26 @@ jobs:
       - uses: actions/checkout@v5
       - run: docker build -f backend/Dockerfile -t dumbo-api:ci .
       - run: docker build -f frontend/Dockerfile -t dumbo-web:ci .
+      - name: Comprobar configuracion Nginx local
+        run: docker run --rm --add-host api:127.0.0.1 dumbo-web:ci nginx -t
+      - name: Comprobar proxy hacia un backend configurable
+        run: |
+          cleanup() {
+            docker rm -f dumbo-web-smoke dumbo-api-smoke >/dev/null 2>&1 || true
+            docker network rm dumbo-smoke >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          docker network create dumbo-smoke
+          docker run -d --name dumbo-api-smoke --network dumbo-smoke dumbo-api:ci
+          docker run -d --name dumbo-web-smoke --network dumbo-smoke -e API_UPSTREAM=http://dumbo-api-smoke:8080 dumbo-web:ci
+          docker exec dumbo-web-smoke nginx -t
+          for attempt in $(seq 1 20); do
+            if response=$(docker exec dumbo-web-smoke wget -qO- http://127.0.0.1/api/health); then
+              printf '%s' "$response" | python3 -c 'import json,sys; data=json.load(sys.stdin); assert data["status"] == "ok" and data["service"] == "dumbo-api"'
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs dumbo-api-smoke
+          docker logs dumbo-web-smoke
+          exit 1

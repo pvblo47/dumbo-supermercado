@@ -36,10 +36,12 @@ El único caso técnico inicial es disponibilidad. Domain está preparado para r
 - Validar transiciones de cuenta, reserva/pago e idempotencia con el ERS actualizado. D07 debe revisarse como propuesta, no como aprobación del profesor.
 - Preparar notificaciones/reintentos, conciliación Webpay y consolidación de RF-008 en su etapa correspondiente.
 
-La base operacional de este Compose no sustituye al diseño objetivo del worker y la base de reportes. Tampoco decide el reparto de los servicios entre las VM de clase.
+El despliegue de entrega usa **tres VM distintas**: frontend, backend y PostgreSQL. Las cuatro capas .NET permanecen juntas en la VM backend. La VM frontend sirve los archivos Angular mediante Nginx; Angular se ejecuta en el navegador. El detalle está en [Despliegue en tres VM](DESPLIEGUE_VM.md).
+
+El Compose raíz reúne los servicios solo para trabajo local. No sustituye el despliegue distribuido ni implementa el worker y la base de reportes del diseño objetivo.
 
 ## Estado frente al ERS
 
-La revisión de requisitos y sus límites están en [VALIDACION_ERS.md](VALIDACION_ERS.md). La base respeta la dirección de dependencias y separa frontend, API y PostgreSQL. Las plantillas DEV/PROD preparan configuraciones, redes y volúmenes diferentes; todavía no acreditan un despliegue real de ambos ambientes.
+La revisión de requisitos y sus límites están en [VALIDACION_ERS.md](VALIDACION_ERS.md). La base respeta la dirección de dependencias y prepara la separación por VM. Las plantillas DEV/PROD locales y las configuraciones por VM todavía no acreditan un despliegue real.
 
 Los siguientes elementos pertenecen a la arquitectura objetivo y siguen sin implementarse: autenticación y autorización por rol, modelo/migraciones del supermercado, archivos de imágenes persistentes, Webpay, Resend y consolidación de reportes mediante un worker y una base analítica. El worker de reportes no debe modificar cuentas, ventas o stock del origen ni asumir los reintentos de correo de D06.
