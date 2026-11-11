@@ -1,12 +1,12 @@
 # Dumbo Supermercados
 
-Proyecto del equipo: **Angular 20 + .NET 10 + PostgreSQL**. Esta es la base de desarrollo; las funcionalidades del supermercado se incorporarán por tareas.
+Sistema del equipo con **Angular 20, .NET 10 y PostgreSQL**. El proyecto tiene una base de conexión y arquitectura; los módulos del supermercado todavía se desarrollan por tareas.
 
-## Probar todo desde una terminal
+El arranque de esta página es **local**. La entrega se despliega en **tres VM distintas: frontend, backend y base de datos**; ver la [guía de despliegue](docs/DESPLIEGUE_VM.md).
 
-Necesitas **Git y Docker Desktop abierto**. Para esta opción, Node y .NET se ejecutan dentro de Docker.
+## Primera vez
 
-La primera vez:
+Necesitas Git y acceso al repositorio:
 
 ```powershell
 git clone https://github.com/pvblo47/dumbo-supermercado.git
@@ -14,67 +14,74 @@ cd dumbo-supermercado
 Copy-Item .env.example .env
 ```
 
-En Linux/macOS, usar `cp .env.example .env`. Abrir `.env` y cambiar `POSTGRES_PASSWORD` por una clave local de desarrollo. Este archivo no se sube a Git.
+Abrir `.env` y cambiar `POSTGRES_PASSWORD` por una clave local. Este archivo no se sube a Git. En Linux/macOS, usar `cp .env.example .env`.
 
-Desde esa misma terminal:
+## Probar todo desde una terminal
+
+Con **Docker Desktop abierto**, ejecutar desde la raíz:
 
 ```sh
 docker compose up --build -d
 ```
 
-**Abrir la aplicación: http://localhost:8080**
+Abrir **http://localhost:8080**. Frontend, API y base de datos quedan en segundo plano. Para esta opción no necesitas instalar Node ni .NET en el equipo.
 
-Este comando levanta frontend, API y base de datos en segundo plano. Puedes seguir usando la misma terminal o cerrarla; los servicios continúan funcionando mientras Docker esté abierto. La primera construcción puede tardar varios minutos.
-
-Para detenerlos y conservar los datos:
+Para detenerlos conservando los datos:
 
 ```sh
 docker compose down
 ```
 
-Si cambiaste código, repetir `docker compose up --build -d` para reconstruir lo modificado. Para trabajar con el servidor de desarrollo de cada parte, usar la opción correspondiente de abajo.
+Si modificas código, repetir `docker compose up --build -d` para reconstruir lo cambiado. Para desarrollar con los servidores locales, elegir la sección que corresponda a la tarea.
 
-## Trabajar en tu parte
+## Trabajar en frontend
 
-Los comandos siguientes parten de la raíz del repositorio. Cada integrante puede iniciar solo la parte que está desarrollando.
-
-### Frontend
-
-Necesitas **Node.js 24 y npm 11**.
+Necesitas **Node.js 24 y npm 11**. Desde la raíz:
 
 ```sh
 git switch frontend
+git pull --ff-only
 cd frontend
 npm ci
 npm start
 ```
 
-Abrir http://localhost:4200. `npm ci` instala las dependencias; repetirlo al cambiar el archivo de dependencias. Angular muestra el estado de la API: para probar el flujo integrado, la API debe estar ejecutándose también.
+Abrir **http://localhost:4200**. `npm ci` se usa al preparar el proyecto o al cambiar las dependencias; después basta `npm start`.
 
-### Backend
+- Pantallas y componentes: `frontend/src/app/features/`.
+- Llamadas a la API: `frontend/src/app/core/api/`.
+- Para probar con la API y la base levantadas en Docker, ejecutar antes `docker compose up --build -d api` desde la raíz. Ambos servicios quedan en segundo plano y Angular sigue usando una sola terminal.
+- No acceder a PostgreSQL desde Angular ni tratar las validaciones visuales como autorización.
 
-Necesitas el **SDK .NET 10**.
+## Trabajar en backend
+
+Necesitas el **SDK .NET 10**. Desde la raíz:
+
+Si la API ya está ejecutándose en Docker, detener solo `frontend` y `api` con `docker compose stop frontend api` antes del arranque local; la base puede continuar levantada.
 
 ```sh
 git switch backend
+git pull --ff-only
 dotnet run --project backend/src/Dumbo.Api --launch-profile http
 ```
 
-Comprobar la API en http://localhost:5080/api/health. Para conectarla a PostgreSQL local, seguir la [configuración de la base de datos](docs/GUIA_TECNICA.md#desarrollar-angular-y-net-por-separado).
+Comprobar la API en **http://localhost:5080/api/health**. Antes de trabajar con datos, completar la [configuración de PostgreSQL local](docs/GUIA_TECNICA.md#desarrollar-angular-y-net-por-separado).
 
-El arranque local de Angular y .NET usa una terminal por proceso cuando quieres desarrollar ambos a la vez. Para probar todo junto desde una terminal, usa Docker como se indica arriba. Detén los servicios Docker antes de cambiar al arranque local para evitar ocupar el mismo puerto de la API.
+| Proyecto | Qué se desarrolla ahí |
+| --- | --- |
+| `Dumbo.Api` | Controladores y respuestas HTTP. |
+| `Dumbo.Application` | Casos de uso, DTO y contratos internos. |
+| `Dumbo.Domain` | Entidades y reglas de negocio. |
+| `Dumbo.Infrastructure` | EF Core/PostgreSQL, archivos y proveedores externos. |
 
-## Cómo subimos los cambios
+Las capas ejecutan **una API**. Los controladores delegan casos de uso; no contienen SQL ni acceden directamente al DbContext. Ver [MVC y dependencias](docs/ARQUITECTURA.md).
 
-```mermaid
-flowchart LR
-    F[frontend] -->|Pull request| D[dev: integración]
-    B[backend] -->|Pull request| D
-    D -->|Pull request y revisión| M[main: estable]
-```
+## Subir e integrar una tarea
 
-1. **Trabaja en `frontend` o `backend`**. Antes de comenzar, actualiza tu rama con `git pull --ff-only`.
-2. Guarda y sube los archivos de tu tarea. Ejemplo para frontend, desde la raíz:
+**`frontend` / `backend` → pull request a `dev` → pull request de `dev` a `main`.**
+
+1. Actualizar la rama antes de trabajar y comprobar los cambios antes de subirlos.
+2. Desde la raíz, agregar los archivos de la tarea, hacer commit y push. Ejemplo de frontend:
 
    ```sh
    git add frontend/
@@ -82,18 +89,22 @@ flowchart LR
    git push origin frontend
    ```
 
-3. En GitHub, abre un **pull request hacia `dev`**. Otro integrante revisa los cambios y se comprueba CI.
-4. Cuando lo integrado esté listo, abre un **pull request de `dev` hacia `main`**.
+   Para backend, usar los archivos correspondientes y `git push origin backend`.
 
-Usar **Create a merge commit** y conservar las cuatro ramas. El botón de GitHub puede proponer `main` como destino: cambiarlo a `dev` cuando se integra frontend o backend.
+3. Abrir un PR con **base `dev`**, asociar la tarea y explicar cómo se probó. GitHub puede proponer `main`: cambiar el destino a `dev`.
+4. Revisar con otro integrante y esperar CI aprobado. Cuando el conjunto esté listo, integrar `dev` en `main` mediante otro PR.
 
-Las protecciones se activan en la configuración de GitHub; guardar su archivo en el repositorio no las activa. El detalle de las reglas y cómo sincronizar ramas está en la [guía técnica](docs/GUIA_TECNICA.md#trabajo-en-equipo).
+Usar **Create a merge commit** y conservar las ramas. Las protecciones se activan en GitHub; los archivos del repositorio no las activan por sí solos.
 
 ## Más información
 
-- [Guía técnica](docs/GUIA_TECNICA.md): base de datos, migraciones, pruebas, ramas y configuración.
-- [Arquitectura en capas](docs/ARQUITECTURA.md).
-- [Contratos de la API](docs/CONTRATOS_API.md).
-- [Primeras tareas del equipo](docs/ARRANQUE_EQUIPO.md).
+| Documento | Qué encontrarás |
+| --- | --- |
+| [Guía técnica](docs/GUIA_TECNICA.md) | Base de datos, migraciones, pruebas y DEV/PROD. |
+| [Arquitectura](docs/ARQUITECTURA.md) | MVC, responsabilidades y dependencias entre capas. |
+| [Despliegue en tres VM](docs/DESPLIEGUE_VM.md) | Reparto de servicios, conexiones y configuración por máquina. |
+| [Estado frente al ERS](docs/VALIDACION_ERS.md) | Cobertura actual y requisitos pendientes. |
+| [Contratos de la API](docs/CONTRATOS_API.md) | Rutas disponibles y acuerdos entre frontend y backend. |
+| [Próximos pasos](docs/ARRANQUE_EQUIPO.md) | Trabajo por área y evidencias para revisar. |
 
-CI ya compila, prueba y construye las imágenes. La publicación de imágenes y el despliegue automático en la VM todavía deben configurarse.
+CI compila, prueba y construye imágenes. El despliegue automático en la VM sigue pendiente; la plantilla PROD tampoco equivale a un ambiente desplegado.

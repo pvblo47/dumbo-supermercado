@@ -1,32 +1,17 @@
-# Arranque del equipo
+# Próximos pasos por área
 
-Fecha de preparación: 10 de noviembre de 2026. Presentación prevista: 13 de noviembre.
+Esta lista organiza el trabajo por categoría. Las tareas se asignan en Trello; no dependen del nombre de quien implemente cada parte.
 
-## Gustavo / Juan: modelo y persistencia
+| Área | Próximo trabajo | Evidencia para revisar |
+| --- | --- | --- |
+| Base de datos | Acordar entidades, correo único y estados; añadir mapeos EF, migración y datos de ejemplo. | Una base nueva se crea con la migración y respeta las restricciones. |
+| Backend | Acordar DTO, implementar casos de uso y permisos; conectar persistencia e integraciones. | Solicitudes HTTP, validaciones y pruebas de permisos. |
+| Frontend | Crear las pantallas acordadas y conectarlas a la API; incluir carga, errores y confirmaciones. | Flujo navegable con datos recibidos del backend. |
+| Infraestructura | Configurar las tres VM separadas y completar publicación de imágenes y despliegue automático. | Cambio revisado que llegue a frontend, backend y BD en sus respectivas VM. |
+| QA y documentación | Ejecutar criterios del ERS y actualizar contratos, evidencias y estados de requisitos. | Casos reproducibles y distinción entre completo, parcial y pendiente. |
 
-1. Revisar `DumboDbContext` y el esquema SQL compartido.
-2. Acordar Identity antes de crear las tablas de usuarios.
-3. Cerrar dónde vive el carrito, los estados de reservas e intentos de pago y las restricciones de integridad.
-4. Incorporar entidades en Domain, mapeos EF en Infrastructure y una migración revisada.
-5. Probar una base nueva y dejar datos iniciales ficticios reproducibles.
+## Primera integración propuesta
 
-## Leo / Pablo: API
+Registro sin RUT y consulta de productos como primer flujo. Acordar antes el mecanismo de identidad y sesión, el modelo y los contratos. Esta propuesta no sustituye el alcance de la rúbrica ni declara completos esos requisitos.
 
-1. Levantar la API y consultar su OpenAPI.
-2. Acordar con frontend los primeros DTO y errores de registro/catálogo.
-3. Agregar casos de uso en Application y controladores pequeños en Api.
-4. Incorporar autenticación por roles y pruebas de permisos; esta base todavía no las implementa.
-5. Mantener secretos fuera de Git y revisar migraciones con datos.
-
-## Alonso: Angular
-
-1. Ejecutar `npm ci` y `npm start` dentro de frontend.
-2. Comprobar la API mediante el proxy.
-3. Sustituir gradualmente la pantalla técnica por las pantallas del flujo acordado, tomando el mockup como referencia visual.
-4. Mantener clientes HTTP en `core/api/` y pantallas por caso de uso en `features/`.
-
-## Primera integración
-
-Un registro sin RUT y una consulta de productos son una primera entrega propuesta. Registrar en Trello qué RF quedan parciales y mostrar únicamente lo comprobado. Revisar los cambios con otro integrante antes de integrar.
-
-En paralelo deben completarse acceso al repositorio, CI en verde y las tareas de Docker Hub/VM. El workflow inicial construye y prueba; no equivale al despliegue automático exigido para el hito.
+Cada tarea se integra mediante PR a `dev`; las entregas estables pasan de `dev` a `main`. Definiciones técnicas en la [arquitectura](ARQUITECTURA.md), los [contratos](CONTRATOS_API.md) y la [revisión del ERS](VALIDACION_ERS.md).

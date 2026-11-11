@@ -1,0 +1,10 @@
+services:
+  api:
+    image: ${BACKEND_IMAGE:?Define BACKEND_IMAGE con una imagen versionada}
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${APP_ENVIRONMENT:-Development}
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__Dumbo: ${DB_CONNECTION_STRING:?Define la conexion a la VM de PostgreSQL}
+    ports:
+      - "${BACKEND_BIND_ADDRESS:?Define la IP privada de la VM backend}:${API_PORT:-8080}:8080"
