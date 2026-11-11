@@ -9,14 +9,25 @@ flowchart LR
   App --> Domain[Domain: entidades y reglas]
   Api -->|composición DI| Infra[Infrastructure: EF Core / Npgsql]
   Infra -->|implementa interfaces| App
+  Infra -->|mapea entidades| Domain
   Infra --> PostgreSQL[(PostgreSQL transaccional)]
 ```
 
 Las flechas entre proyectos representan dependencias, no contenedores C4 o Docker. Esta solución aplica MVC en capas con Angular separado: vista en frontend, controladores en API y modelo/reglas/persistencia distribuidos entre las capas del backend.
 
-No poner SQL en controladores ni reglas de negocio en componentes Angular. No exponer entidades EF directamente como respuesta de la API. Autorizar y revalidar entradas en el backend cuando se incorporen los casos de uso.
+| Parte | Responsabilidad | Puede depender de |
+| --- | --- | --- |
+| Angular | Vistas, interacción y cliente HTTP. | Contrato HTTP de la API, nunca PostgreSQL directamente. |
+| Api | Controladores, respuestas HTTP y composición de servicios. | Application e Infrastructure para registrar dependencias. |
+| Application | Casos de uso, DTO y abstracciones. | Domain. |
+| Domain | Entidades y reglas del negocio. | Ningún otro proyecto de la solución ni EF/ASP.NET. |
+| Infrastructure | EF Core/Npgsql, archivos y proveedores externos cuando se implementen. | Application y Domain. |
 
-El único caso técnico inicial es disponibilidad: el controlador de readiness consulta una abstracción de Application, implementada en Infrastructure mediante EF. Domain está preparado para recibir el modelo acordado; no contiene entidades ficticias para dar por terminado un RF.
+Un controlador invoca una interfaz de Application; DI conecta esa interfaz con Infrastructure. La referencia de Api a Infrastructure permite esa composición: no autoriza a introducir consultas EF o SQL en los controladores de negocio. El caso de disponibilidad ya sigue este recorrido.
+
+En MVC, Angular es la vista; Api contiene los controladores; Application/Domain representan el modelo y sus casos de uso; Infrastructure materializa la persistencia. El modelo no se limita al DbContext. Las respuestas de la API usan DTO, sin exponer directamente entidades EF.
+
+El único caso técnico inicial es disponibilidad. Domain está preparado para recibir las entidades acordadas, pero todavía está vacío. La autorización y las validaciones de negocio se implementarán en backend; las de Angular no las sustituyen.
 
 ## Decisiones que faltan antes de modelar cuentas y compras
 
@@ -26,3 +37,9 @@ El único caso técnico inicial es disponibilidad: el controlador de readiness c
 - Preparar notificaciones/reintentos, conciliación Webpay y consolidación de RF-008 en su etapa correspondiente.
 
 La base operacional de este Compose no sustituye al diseño objetivo del worker y la base de reportes. Tampoco decide el reparto de los servicios entre las VM de clase.
+
+## Estado frente al ERS
+
+La revisión de requisitos y sus límites están en [VALIDACION_ERS.md](VALIDACION_ERS.md). La base respeta la dirección de dependencias y separa frontend, API y PostgreSQL. Las plantillas DEV/PROD preparan configuraciones, redes y volúmenes diferentes; todavía no acreditan un despliegue real de ambos ambientes.
+
+Los siguientes elementos pertenecen a la arquitectura objetivo y siguen sin implementarse: autenticación y autorización por rol, modelo/migraciones del supermercado, archivos de imágenes persistentes, Webpay, Resend y consolidación de reportes mediante un worker y una base analítica. El worker de reportes no debe modificar cuentas, ventas o stock del origen ni asumir los reintentos de correo de D06.

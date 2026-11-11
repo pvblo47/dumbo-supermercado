@@ -1,34 +1,37 @@
-# Contratos iniciales
+# Contratos de la API
 
-El contrato ejecutable de los endpoints existentes se consulta en `/openapi/v1.json` con la API en Development. Este archivo documenta el alcance inicial; no da por acordados los DTO de negocio.
+Esta guía describe lo que existe y lo que frontend y backend deben acordar antes de implementar. El contrato ejecutable actual se consulta en `/openapi/v1.json` con la API en Development.
 
-## Implementados
+## Rutas disponibles
 
-### GET /api/health
+| Método y ruta | Respuesta | Qué comprueba |
+| --- | --- | --- |
+| `GET /api/health` | 200 | Que la API puede responder; no requiere BD. |
+| `GET /api/health/ready` | 200 o 503 | Que la API puede conectarse a PostgreSQL. |
 
-Respuesta 200, independiente de PostgreSQL:
+Respuesta de `/api/health`:
 
 ```json
 {"status":"ok","service":"dumbo-api","version":"0.1.0"}
 ```
 
-### GET /api/health/ready
-
-Respuesta 200 si se puede establecer conexión con PostgreSQL:
+Respuesta de `/api/health/ready` con conexión:
 
 ```json
 {"status":"ready","checks":{"database":"up"}}
 ```
 
-Sin conexión devuelve 503 `application/problem+json` con `code: DATABASE_UNAVAILABLE`, sin contraseñas ni detalles internos. La conectividad no acredita un modelo migrado ni datos de negocio válidos.
+Sin conexión devuelve 503, contenido `application/problem+json` y `code: DATABASE_UNAVAILABLE`. No expone contraseñas ni detalles internos. Un 200 no demuestra que haya tablas migradas o funcionalidades de negocio implementadas.
 
-## Pendientes de acordar juntos
+## Contratos de negocio por definir
 
-1. Registro y acceso: campos sin RUT, activación, correo normalizado único, permisos y estados.
-2. Catálogo/productos: UUID, SKU, presentación vendible, precio CLP, disponibilidad e imagen.
-3. Carrito: acumulación de cantidades enteras, errores de stock y total calculado en servidor.
-4. Errores por campo, códigos HTTP, paginación, filtros y convenciones de fechas.
+| Flujo | Acuerdo necesario |
+| --- | --- |
+| Cuentas | Datos sin RUT; correo normalizado único; contraseña propia, activación, permisos y estados. |
+| Productos | Identificador interno, SKU, presentación vendible, precio CLP, stock e imagen. |
+| Carrito y compra | Propietario, cantidades enteras, stock, totales del servidor y estados de pago. |
+| Listados y errores | Filtros, paginación, fechas, códigos HTTP y mensajes por campo. |
 
-Cada contrato de negocio debe registrar método/ruta, actor permitido, ejemplo de solicitud, respuesta exitosa y errores verificables. Identificadores UUID se representan como cadenas JSON. No incluir rol asignable libremente ni credenciales de BD en los contratos de Angular.
+Para cada endpoint nuevo registrar **método/ruta, actor autorizado, solicitud, respuesta y errores**, con ejemplos. Frontend y backend pueden acordarlo antes de terminar la pantalla o las tablas.
 
-Los contratos pueden prepararse mientras se inicializan ambos proyectos: no dependen de que la pantalla o la tabla ya estén construidas.
+No aceptar desde Angular un rol o propietario arbitrario, un total de compra definitivo ni credenciales de BD. Los endpoints de negocio todavía no existen; esta tabla no reserva rutas ni da por implementados los RF.

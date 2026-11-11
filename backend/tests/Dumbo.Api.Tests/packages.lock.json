@@ -509,6 +509,7 @@
         "type": "Project",
         "dependencies": {
           "Dumbo.Application": "[0.1.0, )",
+          "Dumbo.Domain": "[0.1.0, )",
           "Microsoft.Extensions.Configuration.Abstractions": "[10.0.5, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
