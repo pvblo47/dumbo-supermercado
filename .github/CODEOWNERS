@@ -1,0 +1,5 @@
+# Revisores responsables de todos los archivos, incluido este listado.
+# En main se requiere una aprobacion de Pablo O de Juan cuando se active
+# Require review from Code Owners. En dev basta cualquier revisor con escritura.
+# Ambos usuarios deben tener permiso de escritura; no basta con listarlos aqui.
+* @pvblo47 @Algeito

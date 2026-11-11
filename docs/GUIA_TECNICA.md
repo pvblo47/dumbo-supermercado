@@ -190,7 +190,7 @@ Si hay conflictos, resolverlos, comprobar la aplicación y completar el merge an
 
 1. Comprobar el flujo integrado en `dev` y preparar las evidencias de la entrega.
 2. Abrir un pull request con **base `main`** y **compare `dev`**.
-3. Esperar una aprobación de otro integrante y todos los checks obligatorios en verde.
+3. Esperar una aprobación de Pablo (`@pvblo47`) o Juan (`@Algeito`), distinta del autor y de quien hizo el último push, y todos los checks obligatorios en verde. Este requisito depende de que CODEOWNERS esté en `main` y su ruleset esté activo.
 4. Integrar con **Create a merge commit**. Conservar `dev`.
 5. Si `main` queda por delante de `dev`, sincronizarlas mediante un pull request **`main` → `dev`** antes de la siguiente entrega. Después, actualizar las ramas de trabajo desde `dev`.
 
@@ -198,24 +198,24 @@ El check `flujo-ramas` rechaza los pull requests hacia `main` que no provengan d
 
 ### Protecciones de main y dev
 
-Las protecciones se administran en **GitHub → Settings → Branches**. El archivo [.github/branch-protection.json](../.github/branch-protection.json) permite reproducir esta configuración; versionarlo no activa las restricciones por sí solo. El estado efectivo debe consultarse en GitHub.
+Las protecciones se administran en **GitHub → Settings → Rulesets**. Las configuraciones actuales son [dev.json](../.github/rulesets/dev.json) y [main.json](../.github/rulesets/main.json). Versionarlas no activa las restricciones. Para el orden de activación, los permisos y la delegación, seguir [Revisión y aprobaciones](REVISION_Y_APROBACIONES.md).
 
 La política para ambas ramas exige:
 
-- Pull request y **una aprobación** de otro integrante. Los cambios nuevos invalidan las aprobaciones anteriores y el último push debe revisarlo otra persona.
+- Pull request y **una aprobación**: cualquier otro colaborador con escritura en `dev`; Pablo o Juan mediante CODEOWNERS en `main`. Los cambios nuevos invalidan las aprobaciones anteriores y el último push debe revisarlo otra persona.
 - Checks `flujo-ramas`, `backend`, `frontend` y `docker` correctos, provenientes de GitHub Actions.
 - Rama actualizada respecto del destino y conversaciones resueltas.
 - Bloqueo de pushes directos que no cumplan las reglas, pushes forzados y eliminación de ramas.
 - Aplicación también al administrador, sin excepciones de bypass configuradas.
 
-El propietario puede aplicar el archivo a cada rama con GitHub CLI, si tiene `gh` instalado y una sesión autenticada con permisos de administración:
+El propietario puede importar los JSON desde la interfaz de Rulesets. Como alternativa, si tiene GitHub CLI instalado y autenticado con administración, puede crear las dos reglas. Verificar primero que no existan ya para evitar duplicarlas:
 
 ```sh
-gh api --method PUT repos/pvblo47/dumbo-supermercado/branches/main/protection --input .github/branch-protection.json
-gh api --method PUT repos/pvblo47/dumbo-supermercado/branches/dev/protection --input .github/branch-protection.json
+gh api --method POST repos/pvblo47/dumbo-supermercado/rulesets --input .github/rulesets/dev.json
+gh api --method POST repos/pvblo47/dumbo-supermercado/rulesets --input .github/rulesets/main.json
 ```
 
-Consultar el estado efectivo en GitHub después de aplicarlo. Referencia: [protección de ramas de GitHub](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
+Aplicar la regla de `main` después de verificar a Juan como colaborador con escritura e integrar CODEOWNERS en `main`. Consultar el estado efectivo en GitHub después de aplicarlas.
 
 El propietario debe invitar a los integrantes en **Settings → Collaborators**. Con aprobación obligatoria se necesita al menos otro integrante con permisos de escritura para revisar los pull requests; el autor no aprueba su propio trabajo.
 
