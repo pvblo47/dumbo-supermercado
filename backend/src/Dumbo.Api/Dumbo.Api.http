@@ -1,0 +1,13 @@
+@host = http://localhost:5080
+
+### Proceso API disponible
+GET {{host}}/api/health
+Accept: application/json
+
+### Conectividad con PostgreSQL (200 o 503 controlado)
+GET {{host}}/api/health/ready
+Accept: application/json
+
+### Contrato en Development
+GET {{host}}/openapi/v1.json
+Accept: application/json

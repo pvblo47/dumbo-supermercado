@@ -1,0 +1,30 @@
+# Dependencias y salidas de compilacion
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/.angular/
+**/coverage/
+**/TestResults/
+.local/
+
+# Configuracion local y secretos
+.env
+.env.*
+!.env.example
+!**/.env.example
+**/appsettings.*.local.json
+*.user
+*.suo
+*.pfx
+*.p12
+*.pem
+.vs/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Editores: se comparte solo la configuracion del proyecto
+.vscode/*
+!.vscode/extensions.json
+!.vscode/tasks.json

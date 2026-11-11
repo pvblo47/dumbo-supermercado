@@ -1,0 +1,15 @@
+<header class="header"><a class="brand" routerLink="/" aria-label="Dumbo, inicio">dumbo</a><span>Proyecto Integrador de Plataformas</span></header>
+<main>
+  <p class="eyebrow">BASE DE DESARROLLO</p>
+  <h1>Listos para empezar.</h1>
+  <p class="intro">Angular, API y persistencia tienen su lugar. Esta pantalla permite comprobar la conexión antes de integrar las funcionalidades del supermercado.</p>
+  <section class="status-grid" aria-label="Estado de los servicios" aria-live="polite" [attr.aria-busy]="loading()">
+    <article><span class="step">01</span><h2>Frontend</h2><p>Angular 20</p><strong class="status connected">En ejecución</strong></article>
+    <article><span class="step">02</span><h2>API</h2><p>ASP.NET Core 10</p><strong class="status" [class.connected]="!loading() && apiOnline()">{{ loading() ? 'Comprobando…' : apiOnline() ? 'Conectada' : 'Sin conexión' }}</strong></article>
+    <article><span class="step">03</span><h2>Base de datos</h2><p>PostgreSQL</p><strong class="status" [class.connected]="!loading() && databaseOnline()">{{ loading() ? 'Comprobando…' : databaseOnline() ? 'Conectada' : 'Sin conexión' }}</strong></article>
+  </section>
+  <button type="button" (click)="refresh()" [disabled]="loading()">{{ loading() ? 'Comprobando servicios…' : 'Comprobar de nuevo' }}</button>
+  <aside><h2>Primer paso del equipo</h2><p>Revisar el README, acordar los contratos de cuentas y productos e incorporar el modelo antes de crear la primera migración.</p><p class="note">El estado de PostgreSQL comprueba conectividad. No acredita que existan tablas, usuarios o funcionalidades implementadas.</p></aside>
+  <router-outlet />
+</main>
+<footer>Dumbo Supermercados · Entorno de desarrollo</footer>
