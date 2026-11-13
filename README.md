@@ -100,6 +100,10 @@ Usar **Create a merge commit** y conservar las ramas. Las protecciones se activa
 
 | Documento | Qué encontrarás |
 | --- | --- |
+| [Índice de documentación](docs/README.md) | ERS, arquitectura, diagramas y documentos vigentes. |
+| [ERS completo](docs/ERS.md) | Texto del Word (5), con contradicciones conservadas y señaladas aparte. |
+| [C4 y draw.io](docs/ARQUITECTURA_C4.md) | Contexto y contenedores objetivo, tecnologías y estado de implementación. |
+| [Plan de trabajo](docs/PLAN_DE_TRABAJO.md) | Las 17 tarjetas y prioridades hasta el 20 de noviembre. |
 | [Guía técnica](docs/GUIA_TECNICA.md) | Base de datos, migraciones, pruebas y DEV/PROD. |
 | [Arquitectura](docs/ARQUITECTURA.md) | MVC, responsabilidades y dependencias entre capas. |
 | [Despliegue en tres VM](docs/DESPLIEGUE_VM.md) | Reparto de servicios, conexiones y configuración por máquina. |

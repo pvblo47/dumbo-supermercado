@@ -4,7 +4,7 @@ Fecha: 11 de noviembre de 2026. Esta revisión comprueba la base del repositorio
 
 ## Fuente y alcance
 
-Se contrastó `ERS_Dumbo_Hito2_Revision_2026-11-04.docx`, basado en el ERS final del equipo `(4)` e incorporando la retroalimentación de retirar RUT y añadir eliminación de cuentas. SHA-256 de la revisión consultada: `8e246d9bd811879d3a892ac731f17aff71d17aa420bf4c5e886cdc4bfd86635e`.
+Se contrastó `ERS - Proyecto Integrador Plataformas (5).docx`, recibido el 11 de noviembre de 2026 y transcrito íntegramente en [ERS.md](ERS.md). SHA-256: `315dd7aad50488e991a4dcd5d7dc186b015093cd7f0284d16c63bcda9ed98cf0`. Esta fuente sustituye la revisión del 4 de noviembre como referencia activa. RF-007 aún contiene la validación que prohíbe eliminar clientes, incompatible con su descripción y D07; véase P-01 en [Decisiones y pendientes](DECISIONES_Y_PENDIENTES.md).
 
 La fuente identifica los detalles D05, D06 y D07 como propuestas del equipo. La revisión del código no convierte esas propuestas ni la interpretación de MVC en aprobación del profesor. No se modificó el documento fuente.
 
@@ -67,6 +67,6 @@ Angular 20 y .NET 10 son el stack acordado para este proyecto. PostgreSQL, EF Co
 - Dependencias de los cuatro proyectos comprobadas contra sus archivos `.csproj`; Domain no depende de proyectos ni paquetes de infraestructura.
 - Configuración Compose de DEV/PROD validada sin iniciar servicios: proyectos, redes y volúmenes distintos, entornos Development/Production correctos.
 - Restauración y compilación .NET completadas. La ejecución local de tres pruebas HTTP fue bloqueada por Windows Application Control al cargar `Dumbo.Infrastructure.dll`; la prueba de PostgreSQL real se omitió al no haber BD local. No se modificó esa política del equipo.
-- Los resultados de ejecución en Linux se verifican en el CI del PR de esta revisión. No confundir la compilación local con una ejecución local de pruebas aprobada.
+- La ejecución en Linux del commit `a93efee` pasó en [CI 42959221908](https://github.com/pvblo47/dumbo-supermercado/actions/runs/42959221908): cuatro pruebas backend (incluida PostgreSQL real), dos frontend y construcción/comprobación de proxy Docker. Esta es evidencia de la base técnica, no de los RF pendientes. No confundir la compilación local con una ejecución local de pruebas aprobada.
 
 Resultado: **base compatible con la separación del ERS, con implementación funcional todavía pendiente**. Ni una estructura de carpetas ni CI en verde acreditan por sí solos el cumplimiento de los ocho RF.
