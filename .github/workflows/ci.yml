@@ -9,9 +9,12 @@ on:
 permissions:
   contents: read
 
+env:
+  DOCKERHUB_USERNAME: pvbl0dev
+
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   flujo-ramas:
@@ -83,8 +86,8 @@ jobs:
     needs: [backend, frontend]
     steps:
       - uses: actions/checkout@v5
-      - run: docker build -f backend/Dockerfile -t dumbo-api:ci .
-      - run: docker build -f frontend/Dockerfile -t dumbo-web:ci .
+      - run: docker build -f backend/Dockerfile --label org.opencontainers.image.revision="$GITHUB_SHA" --label org.opencontainers.image.source="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" -t dumbo-api:ci .
+      - run: docker build -f frontend/Dockerfile --label org.opencontainers.image.revision="$GITHUB_SHA" --label org.opencontainers.image.source="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" -t dumbo-web:ci .
       - name: Comprobar configuracion Nginx local
         run: docker run --rm --add-host api:127.0.0.1 dumbo-web:ci nginx -t
       - name: Comprobar proxy hacia un backend configurable
@@ -108,3 +111,50 @@ jobs:
           docker logs dumbo-api-smoke
           docker logs dumbo-web-smoke
           exit 1
+      - name: Verificar configuracion de Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          if [[ -z "$DOCKERHUB_TOKEN" ]]; then
+            echo "::error::Configura el secret DOCKERHUB_TOKEN con permiso de escritura para pvbl0dev antes de publicar desde main."
+            exit 1
+          fi
+      - name: Iniciar sesion en Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Publicar las imagenes verificadas
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          version="sha-${GITHUB_SHA}"
+          frontend_image="${DOCKERHUB_USERNAME}/dumbo-frontend"
+          backend_image="${DOCKERHUB_USERNAME}/dumbo-backend"
+
+          # Primero se publican ambas versiones identificadas por commit.
+          docker tag dumbo-web:ci "${frontend_image}:${version}"
+          docker tag dumbo-api:ci "${backend_image}:${version}"
+          docker push "${frontend_image}:${version}"
+          docker push "${backend_image}:${version}"
+
+          # Los alias de la clase avanzan despues de publicar ambas versiones.
+          docker tag "${frontend_image}:${version}" "${frontend_image}:latest"
+          docker tag "${backend_image}:${version}" "${backend_image}:latest"
+          docker push "${frontend_image}:latest"
+          docker push "${backend_image}:latest"
+
+          {
+            echo '## Imagenes publicadas en Docker Hub'
+            printf 'Commit: `%s`\n\n' "$GITHUB_SHA"
+            echo '| Servicio | Version por commit | Referencia con digest |'
+            echo '| --- | --- | --- |'
+            for image in "$frontend_image" "$backend_image"; do
+              digest=$(docker image inspect "${image}:${version}" --format '{{index .RepoDigests 0}}')
+              printf '| `%s` | `%s:%s` | `%s` |\n' "$image" "$image" "$version" "$digest"
+            done
+            echo
+            echo 'Publicacion completada. Esta ejecucion no actualiza las VM.'
+          } >> "$GITHUB_STEP_SUMMARY"
