@@ -12,6 +12,7 @@
 .env
 .env.*
 !.env.example
+!.env.prod.example
 !**/.env.example
 **/appsettings.*.local.json
 *.user

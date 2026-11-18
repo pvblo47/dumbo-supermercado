@@ -1,0 +1,8 @@
+services:
+  frontend:
+    image: ${FRONTEND_IMAGE:?Define FRONTEND_IMAGE con una imagen versionada}
+    restart: unless-stopped
+    environment:
+      API_UPSTREAM: ${API_UPSTREAM:?Define la URL privada de la VM backend sin barra final}
+    ports:
+      - "${FRONTEND_BIND_ADDRESS:?Define la IP de escucha de la VM frontend}:${FRONTEND_PORT:-80}:80"

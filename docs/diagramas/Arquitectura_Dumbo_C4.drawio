@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" agent="Codex" compressed="false" pages="2" modified="2026-11-11T05:53:26.591895+00:00">
+  <diagram id="dumbo-contexto" name="01 · Contexto C4">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1700" pageHeight="1250" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" value="" />
+        <mxCell id="1" parent="0" value="" />
+        <mxCell id="c-cliente-dumbo" edge="1" parent="1" source="cliente" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=1;exitY=0.645748987854251;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;endSize=17;" target="dumbo" value="&lt;div style=&quot;width: 220px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 21px;&quot;&gt;Se registra, consulta&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 21px;&quot;&gt;productos y compra&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="-0.0194" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="510" y="367.5" />
+              <mxPoint x="510" y="562.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-trabajador-dumbo" edge="1" parent="1" source="trabajador" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=1;exitY=0.645748987854251;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;endSize=17;" target="dumbo" value="&lt;div style=&quot;width: 215px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;Gestiona clientes,&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;productos e inventario&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="-0.2618" y="-52" as="geometry">
+            <mxPoint x="-52" y="52" as="offset" />
+            <Array as="points">
+              <mxPoint x="510" y="727.5" />
+              <mxPoint x="510" y="667.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-admin-dumbo" edge="1" parent="1" source="admin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=0;exitY=0.6374045801526718;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;endSize=17;" target="dumbo" value="&lt;div style=&quot;text-align:center;font-family:Arial;font-size:22px;line-height:1.27;color:#606060;&quot;&gt;Gestiona cuentas,&lt;br&gt;productos y reportes&lt;/div&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-10" y="1.25" as="offset" />
+            <Array as="points">
+              <mxPoint x="1160" y="375" />
+              <mxPoint x="1160" y="562.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-dumbo-pagos" edge="1" parent="1" source="dumbo" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endSize=17;" target="pagos" value="&lt;div style=&quot;width: 230px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;Inicia pagos y&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;verifica su resultado&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-cliente-pagos" edge="1" parent="1" source="cliente" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=0;exitY=0.645748987854251;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endSize=17;" target="pagos" value="&lt;div style=&quot;width: 440px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;Autoriza el pago en la interfaz del proveedor&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="408.75" as="offset" />
+            <Array as="points">
+              <mxPoint x="35" y="367.5" />
+              <mxPoint x="35" y="1120" />
+              <mxPoint x="850" y="1120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c-dumbo-correo" edge="1" parent="1" source="dumbo" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=0.95;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endSize=17;" target="correo" value="&lt;div style=&quot;width: 190px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;Activación, recuperación&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;y comprobantes de&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;venta&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="-0.3499" y="112" as="geometry">
+            <mxPoint x="-2" y="-20" as="offset" />
+            <Array as="points">
+              <mxPoint x="1030" y="790" />
+              <mxPoint x="1110" y="790" />
+              <mxPoint x="1110" y="961.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cliente" parent="1" style="group;connectable=1;" value="" vertex="1">
+          <mxGeometry height="247" width="300" x="80" y="208" as="geometry" />
+        </mxCell>
+        <mxCell id="cliente-torso" parent="cliente" style="rounded=1;arcSize=40;html=1;whiteSpace=wrap;fillColor=#08427B;strokeColor=#08427B;spacing=12;align=center;verticalAlign=middle;" value="&lt;div style=&quot;text-align:center;font-family:Arial;font-size:24px;line-height:1.27;color:#FFFFFF;&quot;&gt;Cliente / visitante&lt;br&gt;[Persona]&lt;br&gt;Se registra; autenticado&lt;br&gt;compra y gestiona su cuenta.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="175" width="300" y="72" as="geometry" />
+        </mxCell>
+        <mxCell id="cliente-cabeza" parent="cliente" style="ellipse;html=1;fillColor=#08427B;strokeColor=#08427B;" value="" vertex="1">
+          <mxGeometry height="86" width="86" x="107" as="geometry" />
+        </mxCell>
+        <mxCell id="trabajador" parent="1" style="group;connectable=1;" value="" vertex="1">
+          <mxGeometry height="295" width="350" x="60" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="trabajador-torso" parent="trabajador" style="rounded=1;arcSize=40;html=1;whiteSpace=wrap;fillColor=#08427B;strokeColor=#08427B;spacing=12;align=center;verticalAlign=middle;" value="&lt;div style=&quot;text-align:center;font-family:Arial;font-size:25px;line-height:1.27;color:#FFFFFF;&quot;&gt;Trabajador&lt;br&gt;[Persona]&lt;br&gt;Gestiona clientes,&lt;br&gt;productos e inventario.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="209.0080971659919" width="350" y="85.9919028340081" as="geometry" />
+        </mxCell>
+        <mxCell id="trabajador-cabeza" parent="trabajador" style="ellipse;html=1;fillColor=#08427B;strokeColor=#08427B;" value="" vertex="1">
+          <mxGeometry height="102.71255060728745" width="100.33333333333334" x="124.83333333333334" as="geometry" />
+        </mxCell>
+        <mxCell id="admin" parent="1" style="group;connectable=1;" value="" vertex="1">
+          <mxGeometry height="262" width="330" x="1250" y="208" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-torso" parent="admin" style="rounded=1;arcSize=40;html=1;whiteSpace=wrap;fillColor=#08427B;strokeColor=#08427B;spacing=12;align=center;verticalAlign=middle;" value="&lt;div style=&quot;text-align:center;font-family:Arial;font-size:25px;line-height:1.27;color:#FFFFFF;&quot;&gt;Administrador&lt;br&gt;[Persona]&lt;br&gt;Clientes y trabajadores,&lt;br&gt;productos y reportes.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="190" width="330" y="72" as="geometry" />
+        </mxCell>
+        <mxCell id="admin-cabeza" parent="admin" style="ellipse;html=1;fillColor=#08427B;strokeColor=#08427B;" value="" vertex="1">
+          <mxGeometry height="86" width="86" x="122" as="geometry" />
+        </mxCell>
+        <mxCell id="dumbo" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#1168BD;strokeColor=#1168BD;strokeWidth=2;fontFamily=Arial;fontColor=#FFFFFF;spacing=12;shadow=0;" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;Dumbo Supermercados&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;[Sistema de software]&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;Cuentas, catálogo, compras,&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 25px;&quot;&gt;inventario y reportes.&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="210" width="400" x="650" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="pagos" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#999999;strokeColor=#888888;strokeWidth=2;fontFamily=Arial;fontColor=#FFFFFF;spacing=12;shadow=0;" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27;&quot;&gt;&lt;font style=&quot;font-size: 25px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Webpay Plus&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27;&quot;&gt;&lt;font style=&quot;font-size: 25px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;[Sistema externo]&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27;&quot;&gt;&lt;font style=&quot;font-size: 25px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Transbank · API REST&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27;&quot;&gt;&lt;font style=&quot;font-size: 25px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Procesa el pago externo.&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="155" width="400" x="650" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="correo" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#999999;strokeColor=#888888;strokeWidth=2;fontFamily=Arial;fontColor=#FFFFFF;spacing=12;shadow=0;" value="&lt;div style=&quot;text-align:center;font-family:Arial;font-size:23px;line-height:1.27;color:#000000;&quot;&gt;Resend&lt;br&gt;[Sistema externo propuesto]&lt;br&gt;API HTTPS&lt;br&gt;Activación, recuperación&lt;br&gt;y comprobantes.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="247" width="410" x="1250" y="838" as="geometry" />
+        </mxCell>
+        <mxCell id="title" parent="1" style="text;html=1;whiteSpace=wrap;rounded=0;align=left;verticalAlign=middle;spacing=0;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=34;fontColor=#202020;" value="&lt;div style=&quot;text-align:left;&quot;&gt;&lt;div style=&quot;font-family:Arial;font-size:34px;font-weight:700;line-height:1.27;color:#202020;&quot;&gt;Dumbo Supermercados&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="55" width="1450" x="60" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;whiteSpace=wrap;rounded=0;align=left;verticalAlign=middle;spacing=0;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=19;fontColor=#707070;" value="&lt;div style=&quot;text-align:left;&quot;&gt;&lt;div style=&quot;font-family:Arial;font-size:19px;line-height:1.27;color:#707070;&quot;&gt;Modelo C4 · Diagrama de contexto (nivel 1)&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="45" width="1400" x="60" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="text;html=1;whiteSpace=wrap;rounded=0;align=left;verticalAlign=middle;spacing=0;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=15;fontColor=#707070;" value="&lt;div style=&quot;text-align:left;font-family:Arial;font-size:16px;line-height:1.27;color:#707070;&quot;&gt;Diseño objetivo · ERS (5), 11-11-2026. Permisos de cuentas: D07 propuesto; RF-007 contiene contradicción P-01.&lt;br&gt;Respuestas implícitas. Proveedores Webpay y Resend; no representa despliegue completado.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75" width="1540" x="65" y="1170" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="dumbo-contenedores" name="02 · Contenedores C4">
+    <mxGraphModel dx="2049" dy="1175" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1560" background="#FFFFFF" math="0" shadow="0">
+      <root>
+        <mxCell id="0" value="" />
+        <mxCell id="1" parent="0" value="" />
+        <mxCell id="dumbo-boundary" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;align=left;verticalAlign=bottom;spacingLeft=16;spacingBottom=10;fontFamily=Arial;fontSize=15;fontColor=#303030;container=0;collapsible=0;" value="&lt;div style=&quot;text-align:left;&quot;&gt;&lt;div style=&quot;font-family:Arial;font-size:15px;font-weight:700;line-height:1.27;color:#303030;&quot;&gt;Dumbo Supermercados&lt;/div&gt;&lt;div style=&quot;font-family:Arial;font-size:13px;line-height:1.27;color:#303030;&quot;&gt;[Sistema de software]&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="1210" width="1350" x="420" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="l2-usuario-web" edge="1" parent="1" source="usuario" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=1;exitY=0.6374045801526718;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endSize=17;" target="web" value="&lt;div style=&quot;width: 150px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Utiliza la interfaz&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;[Navegador]&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="-0.2086" y="35" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="445" y="355" />
+              <mxPoint x="445" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2-web-api" edge="1" parent="1" source="web" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.15;entryDx=0;entryDy=0;endSize=17;" target="api" value="&lt;div style=&quot;width: 205px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Operaciones, imágenes&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;y reportes&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;[HTTPS · JSON / archivos]&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="37" as="offset" />
+            <Array as="points">
+              <mxPoint x="1000" y="440" />
+              <mxPoint x="1000" y="666" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2-web-pagos" edge="1" parent="1" source="web" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=1;exitY=0.1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endSize=17;" target="pagos" value="&lt;div style=&quot;width: 480px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Redirección del cliente al pago alojado&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;[HTTPS]&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-10" as="offset" />
+            <Array as="points">
+              <mxPoint x="1050" y="360" />
+              <mxPoint x="1050" y="170" />
+              <mxPoint x="2000" y="170" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2-api-operacional" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endSize=17;" target="p-vFRxgjWLriREEWC7w9-2" value="&lt;div style=&quot;width: 245px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Lee y escribe operaciones&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;[SQL / TCP]&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="0.1429" y="140" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1289.9999999999995" y="925" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2-api-imagenes" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.33;entryDx=0;entryDy=0;endSize=17;" target="imagenes" value="&lt;div style=&quot;width: 210px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Guarda / recupera&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;[Sistema de archivos]&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" y="-30" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="950" y="750" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2-api-reportes" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;entryX=0.987;entryY=0.355;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.8;exitDx=0;exitDy=0;" target="p-vFRxgjWLriREEWC7w9-1" value="&lt;div style=&quot;width: 220px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;Lee reportes publicados&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;[SQL / TCP · solo lectura]&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="-0.1257" y="-20" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1000" y="822" />
+              <mxPoint x="1000" y="1214.6" />
+              <mxPoint x="826" y="1214.6" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2-api-pagos" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=1;exitY=0.15;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endSize=17;" target="pagos" value="&lt;div style=&quot;width: 190px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Crea y confirma&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;el pago&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;[HTTPS / API REST]&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-43" as="offset" />
+            <Array as="points">
+              <mxPoint x="1710" y="666" />
+              <mxPoint x="1710" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2-api-correo" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=1;exitY=0.78;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endSize=17;" target="correo" value="&lt;div style=&quot;width: 210px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Envía correos&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;HTTPS / API REST&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="-0.2432" y="37" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1670" y="817.2" />
+              <mxPoint x="1670" y="817.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2-worker-operacional" edge="1" parent="1" source="worker" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;endSize=17;" target="p-vFRxgjWLriREEWC7w9-2" value="&lt;div style=&quot;width: 260px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;Extrae cambios por lotes&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 19px;&quot;&gt;[SQL / TCP · solo lectura]&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="0.25" y="-180" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1423" y="1125" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2-worker-reportes" edge="1" parent="1" source="worker" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;startArrow=none;strokeColor=#707070;strokeWidth=1.5;dashed=1;dashPattern=8 6;labelBackgroundColor=#FFFFFF;fontFamily=Arial;fontSize=15;fontColor=#606060;endSize=17;" target="p-vFRxgjWLriREEWC7w9-1" value="&lt;div style=&quot;width: 210px; box-sizing: border-box; background: rgb(255, 255, 255); padding: 4px 6px;&quot;&gt;&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;Consolida y publica&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(96, 96, 96);&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;[SQL / TCP]&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;">
+          <mxGeometry relative="1" x="-0.3143" y="50" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="55-Ay8C0Nez0kEPZGwt2-1" edge="1" parent="1" source="usuario" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="188.06024096385545" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="usuario" parent="1" style="group;connectable=1;" value="" vertex="1">
+          <mxGeometry height="318" width="290" x="40" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="usuario-torso" parent="usuario" style="rounded=1;arcSize=40;html=1;whiteSpace=wrap;fillColor=#08427B;strokeColor=#08427B;spacing=12;align=center;verticalAlign=middle;" value="&lt;div style=&quot;text-align:center;font-family:Arial;font-size:24px;line-height:1.27;color:#FFFFFF;&quot;&gt;Usuarios de Dumbo&lt;br&gt;[Persona]&lt;br&gt;Cliente, Trabajador&lt;br&gt;y Administrador.&lt;br&gt;Permisos: ERS / D07.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="239.04827586206895" width="279.2592592592593" y="78.95172413793104" as="geometry" />
+        </mxCell>
+        <mxCell id="usuario-cabeza" parent="usuario" style="ellipse;html=1;fillColor=#08427B;strokeColor=#08427B;" value="" vertex="1">
+          <mxGeometry height="94.30344827586207" width="92.37037037037038" x="98.81481481481482" as="geometry" />
+        </mxCell>
+        <mxCell id="web" parent="1" style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#438DD5;strokeColor=#3C7EBC;strokeWidth=2;fontFamily=Arial;fontColor=#FFFFFF;spacing=12;shadow=0;spacingTop=36;" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;Aplicación web&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;[Contenedor: Angular 20 / TypeScript]&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;Interfaz en el navegador.&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;Catálogo, carrito, formularios&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;y vistas según rol.&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="200" width="320" x="540" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="web-barra" parent="web" style="rounded=0;fillColor=#357CB9;strokeColor=none;html=1;" value="" vertex="1">
+          <mxGeometry height="28" width="316" x="2" y="2" as="geometry" />
+        </mxCell>
+        <mxCell id="web-punto-0" parent="web" style="ellipse;fillColor=#70A8D9;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="10" width="10" x="12" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="web-punto-1" parent="web" style="ellipse;fillColor=#70A8D9;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="10" width="10" x="30" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="web-punto-2" parent="web" style="ellipse;fillColor=#70A8D9;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="10" width="10" x="48" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="web-direccion" parent="web" style="rounded=1;arcSize=35;fillColor=#70A8D9;strokeColor=none;" value="" vertex="1">
+          <mxGeometry height="10" width="230" x="76" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="api" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#438DD5;strokeColor=#3C7EBC;strokeWidth=2;fontFamily=Arial;fontColor=#FFFFFF;spacing=12;shadow=0;" value="&lt;div style=&quot;text-align:center;font-family:Arial;font-size:22px;line-height:1.27;color:#FFFFFF;&quot;&gt;API de negocio&lt;br&gt;[Contenedor: ASP.NET Core 10 / C#]&lt;br&gt;Controladores, negocio y datos.&lt;br&gt;Cuentas, productos y compras.&lt;br&gt;Correo y conciliación internos.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="240" width="380" x="1100" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="imagenes" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#438DD5;strokeColor=#3C7EBC;strokeWidth=2;fontFamily=Arial;fontColor=#FFFFFF;spacing=12;shadow=0;" value="&lt;div style=&quot;text-align:center;font-family:Arial;font-size:22px;line-height:1.27;color:#FFFFFF;&quot;&gt;Archivos de productos&lt;br&gt;[Almacenamiento: volumen persistente]&lt;br&gt;VM backend · propuesto.&lt;br&gt;BD guarda su referencia.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="180" width="320" x="540" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="worker" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#438DD5;strokeColor=#3C7EBC;strokeWidth=2;fontFamily=Arial;fontColor=#FFFFFF;spacing=12;shadow=0;" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;Consolidador de reportes&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;[Contenedor: Worker .NET 10 · propuesto]&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;Extrae por lotes, normaliza,&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(255, 255, 255);&quot;&gt;&lt;font style=&quot;font-size: 23px;&quot;&gt;valida y publica los resultados.&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="180" width="380" x="1100" y="1220" as="geometry" />
+        </mxCell>
+        <mxCell id="pagos" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#999999;strokeColor=#888888;strokeWidth=2;fontFamily=Arial;fontColor=#FFFFFF;spacing=12;shadow=0;" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-weight: 700; line-height: 1.27;&quot;&gt;&lt;font style=&quot;font-size: 25px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Webpay Plus&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27;&quot;&gt;&lt;font style=&quot;font-size: 25px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;[Sistema externo]&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27;&quot;&gt;&lt;font style=&quot;font-size: 25px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Transbank · API REST&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27;&quot;&gt;&lt;font style=&quot;font-size: 25px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;Pago alojado externamente.&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="180" width="300" x="1850" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="correo" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#999999;strokeColor=#888888;strokeWidth=2;fontFamily=Arial;fontColor=#FFFFFF;spacing=12;shadow=0;" value="&lt;div style=&quot;text-align:center;font-family:Arial;font-size:23px;line-height:1.27;color:#000000;&quot;&gt;Resend&lt;br&gt;[Sistema externo propuesto]&lt;br&gt;Activación, recuperación&lt;br&gt;y comprobantes · API HTTPS.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="175" width="300" x="1850" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="rf008" parent="1" style="text;html=1;whiteSpace=wrap;rounded=0;align=left;verticalAlign=middle;spacing=0;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#707070;" value="&lt;div style=&quot;text-align:left;font-family:Arial;font-size:14px;line-height:1.2;color:#707070;&quot;&gt;RF-008 · Propuesto:&lt;br&gt;Worker lee origen y publica consolidación.&lt;br&gt;API solo lee cortes publicados.&lt;br&gt;Medir impacto y definir frescura.&lt;br&gt;Ubicación analítica pendiente.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="145" width="370" x="485" y="925" as="geometry" />
+        </mxCell>
+        <mxCell id="footer" parent="1" style="text;html=1;whiteSpace=wrap;rounded=0;align=left;verticalAlign=middle;spacing=0;fillColor=none;strokeColor=none;fontFamily=Arial;fontSize=16;fontColor=#707070;" value="&lt;div style=&quot;text-align:left;font-family:Arial;font-size:16px;line-height:1.27;color:#707070;&quot;&gt;ERS (5) · 11-11-2026 · Seis contenedores C4; no equivalen a seis servicios Docker o seis VM.&lt;br&gt;Base preparada: frontend, API y PostgreSQL; funciones de negocio y solución analítica pendientes.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="2070" x="60" y="1460" as="geometry" />
+        </mxCell>
+        <mxCell id="p-vFRxgjWLriREEWC7w9-1" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;fillColor=#66B2FF;strokeColor=#000000;" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; font-size: 22px; line-height: 1.27; color: rgb(32, 32, 32); font-weight: 700;&quot;&gt;Base de reportes&lt;/div&gt;&lt;div style=&quot;font-family: Arial; font-size: 22px; line-height: 1.27; color: rgb(32, 32, 32); font-weight: 700;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32);&quot;&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;[Contenedor: PostgreSQL separado · propuesto]&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32);&quot;&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Históricos y agregados.&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32);&quot;&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Equivalencias, observaciones&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32);&quot;&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;y control de cargas.&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="210" width="310" x="520" y="1125" as="geometry" />
+        </mxCell>
+        <mxCell id="p-vFRxgjWLriREEWC7w9-2" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;fillColor=#66B2FF;" value="&lt;div style=&quot;text-align:center;&quot;&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32); font-weight: 700; font-size: 22px;&quot;&gt;Base transaccional&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32); font-weight: 700; font-size: 22px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32);&quot;&gt;&lt;font style=&quot;font-size: 17px;&quot;&gt;[Contenedor: PostgreSQL 17]&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32);&quot;&gt;&lt;font style=&quot;font-size: 17px;&quot;&gt;Cuentas, productos y ventas.&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32);&quot;&gt;&lt;font style=&quot;font-size: 17px;&quot;&gt;Pedidos y movimientos de stock.&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;font-family: Arial; line-height: 1.27; color: rgb(32, 32, 32);&quot;&gt;&lt;font style=&quot;font-size: 17px;&quot;&gt;Importaciones y roles.&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="200" width="320" x="1130" y="940" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

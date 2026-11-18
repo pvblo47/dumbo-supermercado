@@ -235,6 +235,7 @@
         "type": "Project",
         "dependencies": {
           "Dumbo.Application": "[0.1.0, )",
+          "Dumbo.Domain": "[0.1.0, )",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "[10.0.3, )"
         }
       }
