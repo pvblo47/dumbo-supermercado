@@ -1,0 +1,64 @@
+<section class="catalog" aria-labelledby="catalog-title" [attr.aria-busy]="state() === 'loading'">
+  <div class="heading">
+    <span class="kicker">DUMBO SUPERMERCADOS</span>
+    <h1 id="catalog-title">Todos los productos</h1>
+    <p class="count" aria-live="polite">
+      @switch (state()) {
+        @case ('loading') { Cargando productos… }
+        @case ('ready') { {{ products().length }} {{ products().length === 1 ? 'producto' : 'productos' }} en el catálogo }
+        @default { &nbsp; }
+      }
+    </p>
+  </div>
+
+  @switch (state()) {
+    @case ('loading') {
+      <div class="grid" aria-hidden="true">
+        @for (i of skeletons; track i) {
+          <div class="card skeleton"><span class="sk photo"></span><span class="sk line short"></span><span class="sk line"></span><span class="sk price"></span><span class="sk button"></span></div>
+        }
+      </div>
+    }
+    @case ('error') {
+      <div class="message error" role="alert">
+        <h2>No pudimos cargar los productos</h2>
+        <p>{{ errorMessage() }}</p>
+        <button type="button" class="primary" (click)="load()">Reintentar</button>
+      </div>
+    }
+    @case ('empty') {
+      <div class="message">
+        <h2>Aún no hay productos en el catálogo</h2>
+        <p>Cuando se agreguen productos aparecerán aquí.</p>
+        <button type="button" class="secondary" (click)="load()">Actualizar</button>
+      </div>
+    }
+    @case ('ready') {
+      <ul class="grid" role="list">
+        @for (product of products(); track product.id) {
+          <li class="card">
+            <div class="media">
+              @if (product.imageUrl) {
+                <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+              } @else {
+                <span class="no-image">Sin imagen</span>
+              }
+            </div>
+            <div class="copy">
+              <span class="category">{{ product.category }}</span>
+              <h2>{{ product.name }}</h2>
+              <p class="presentation">{{ product.presentation }}</p>
+              <strong class="price">{{ formatPrice(product.price) }}</strong>
+              @if (product.stock > 0) {
+                <span class="availability">✓ Disponible</span>
+              } @else {
+                <span class="availability out">Sin stock</span>
+              }
+            </div>
+          </li>
+        }
+      </ul>
+      <p class="note">Precios en pesos chilenos. Las cantidades corresponden a la presentación indicada.</p>
+    }
+  }
+</section>
