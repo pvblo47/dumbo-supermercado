@@ -1,9 +1,11 @@
 using Dumbo.Application.Abstractions;
+using Dumbo.Application.Security;
 using Dumbo.Infrastructure.Persistence;
-using Dumbo.Infrastructure.Security; 
+using Dumbo.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Dumbo.Infrastructure;
 
@@ -18,6 +20,11 @@ public static class DependencyInjection
         services.AddSingleton<TimeProvider>(TimeProvider.System);                                  
         services.AddSingleton<IAccountPasswordHasher, IdentityAccountPasswordHasher>();            
         services.AddScoped<IAccountStore, AccountStore>();  
+        services.AddScoped<IAccountLookup, AccountLookup>();
+        services.AddSingleton<JwtSettings>(sp => JwtSettingsFactory.Create(
+            sp.GetRequiredService<IConfiguration>(),
+            sp.GetRequiredService<IHostEnvironment>()));
+        services.AddSingleton<IAccessTokenIssuer, JwtAccessTokenIssuer>();
         return services;
     }
 }
