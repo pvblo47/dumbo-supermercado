@@ -1,0 +1,18 @@
+services:
+  api:
+    image: pvbl0dev/dumbo-backend:latest
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+  watchtower:
+    image: containrrr/watchtower:1.7.1
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DOCKER_API_VERSION: "1.54"
+      WATCHTOWER_POLL_INTERVAL: "60"
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_CLEANUP: "false"
+    labels:
+      com.centurylinklabs.watchtower.enable: "false"

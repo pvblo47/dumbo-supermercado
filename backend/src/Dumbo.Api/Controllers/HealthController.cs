@@ -10,7 +10,7 @@ public sealed class HealthController : ControllerBase
     [HttpGet]
     [ProducesResponseType<ServiceHealthResponse>(StatusCodes.Status200OK)]
     public ActionResult<ServiceHealthResponse> Get() =>
-        Ok(new ServiceHealthResponse("ok", "dumbo-api", "0.1.0"));
+        Ok(new ServiceHealthResponse("ok", "dumbo-api", "0.1.1"));
 
     [HttpGet("ready")]
     [ProducesResponseType<ReadinessResponse>(StatusCodes.Status200OK)]
