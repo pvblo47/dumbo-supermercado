@@ -1,11 +1,42 @@
-<header class="header">
-  <a class="brand" routerLink="/" aria-label="Dumbo, inicio">dumbo</a>
-  <nav aria-label="Principal">
-    <a routerLink="/catalogo" routerLinkActive="active" ariaCurrentWhenActive="page">Catálogo</a>
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page">Estado del sistema</a>
-  </nav>
+<header>
+  <div class="header-top">
+    <a class="brand" routerLink="/" aria-label="Dumbo Supermercados, inicio">
+      <span class="brand-name">dumbo</span>
+      <span class="brand-sub">SUPERMERCADOS</span>
+    </a>
+  </div>
+  <div class="nav-band">
+    <nav class="container" aria-label="Principal">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page">Inicio</a>
+      <a routerLink="/catalogo" routerLinkActive="active" ariaCurrentWhenActive="page">Catálogo</a>
+    </nav>
+  </div>
+  <app-decor kind="wave" class="wave wave-top" />
 </header>
 <main>
   <router-outlet />
 </main>
-<footer>Dumbo Supermercados · Entorno de desarrollo</footer>
+<footer class="footer">
+  <app-decor kind="wave" class="wave wave-bottom" />
+  <div class="footer-body">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="brand-name small">dumbo</span>
+          <span class="brand-sub">SUPERMERCADOS</span>
+          <p>Catálogo de productos online.</p>
+        </div>
+        <div class="footer-links">
+          <h2>Tu supermercado</h2>
+          <a routerLink="/">Inicio</a>
+          <a routerLink="/catalogo">Explorar productos</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Dumbo Supermercados</p>
+        <a href="#" (click)="scrollToTop($event)">Volver arriba ↑</a>
+      </div>
+    </div>
+  </div>
+</footer>
+<app-product-quick-view />

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { delay, Observable, of, timeout } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Product } from './product.model';
 
@@ -9,9 +9,6 @@ export class ProductService {
   private readonly http = inject(HttpClient);
 
   getProducts(): Observable<Product[]> {
-    if (environment.sampleProducts) {
-      return of(environment.sampleProducts).pipe(delay(600));
-    }
     return this.http.get<Product[]>(`${environment.apiBaseUrl}/products`).pipe(timeout(8000));
   }
 }
