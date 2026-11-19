@@ -4,7 +4,7 @@
     <h1 id="catalog-title">Todos los productos</h1>
     <p class="count" aria-live="polite">
       @switch (state()) {
-        @case ('loading') { Cargando productos… }
+        @case ('loading') { Cargando productos... }
         @case ('ready') { {{ products().length }} {{ products().length === 1 ? 'producto' : 'productos' }} en el catálogo }
         @default { &nbsp; }
       }
@@ -50,7 +50,7 @@
               <p class="presentation">{{ product.presentation }}</p>
               <strong class="price">{{ formatPrice(product.price) }}</strong>
               @if (product.stock > 0) {
-                <span class="availability">✓ Disponible</span>
+                <span class="availability">Disponible</span>
               } @else {
                 <span class="availability out">Sin stock</span>
               }
@@ -58,7 +58,6 @@
           </li>
         }
       </ul>
-      <p class="note">Precios en pesos chilenos. Las cantidades corresponden a la presentación indicada.</p>
     }
   }
 </section>
