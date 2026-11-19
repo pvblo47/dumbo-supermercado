@@ -1,5 +1,6 @@
 using Dumbo.Infrastructure;
 
+using Dumbo.Application.Accounts; 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddScoped<RegisterClientUseCase>();
 
 var app = builder.Build();
 app.UseExceptionHandler();
