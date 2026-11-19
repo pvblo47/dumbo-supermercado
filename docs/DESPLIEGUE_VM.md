@@ -33,7 +33,7 @@ flowchart LR
 | Archivo de configuración | Valores necesarios |
 | --- | --- |
 | Frontend | `FRONTEND_IMAGE`, `FRONTEND_BIND_ADDRESS` y `API_UPSTREAM`. |
-| Backend | `BACKEND_IMAGE`, `BACKEND_BIND_ADDRESS` y `DB_CONNECTION_STRING`. |
+| Backend | `BACKEND_IMAGE`, `BACKEND_BIND_ADDRESS` , `DB_CONNECTION_STRING` y `JWT_KEY`. |
 | Base de datos | `DB_BIND_ADDRESS`, base, usuario y `POSTGRES_PASSWORD`. |
 
 `API_UPSTREAM` debe ser `http://IP_PRIVADA_VM_BACKEND:8080`, sin `/` final. `DB_CONNECTION_STRING` usa como Host la IP o DNS privado de la VM de BD; no `localhost` ni el nombre Docker `db` de otra máquina.
