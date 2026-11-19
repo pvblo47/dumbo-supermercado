@@ -13,6 +13,7 @@ Punto de entrada para el equipo. Actualizado el 11 de noviembre de 2026; Hito 2:
 | Elegir y preparar una tarea | [Plan de trabajo y 17 tarjetas](PLAN_DE_TRABAJO.md) |
 | Levantar frontend, backend o BD | [README del repositorio](../README.md) y [guía técnica](GUIA_TECNICA.md) |
 | Desplegar las tres entidades en VM distintas | [Despliegue en tres VM](DESPLIEGUE_VM.md) |
+| Actualizar frontend y API automáticamente | [Watchtower y demostración CI/CD](WATCHTOWER.md) |
 | Consultar endpoints disponibles | [Contratos de API](CONTRATOS_API.md) |
 | Saber qué está implementado y qué falta | [Validación del ERS](VALIDACION_ERS.md) |
 | Ver pantallas listas y pendientes del frontend | [README del frontend](../frontend/README.md) |
