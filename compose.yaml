@@ -22,6 +22,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${APP_ENVIRONMENT:-Development}
       ASPNETCORE_HTTP_PORTS: "8080"
+      Jwt__Key: ${JWT_KEY:-}
       ConnectionStrings__Dumbo: "Host=db;Port=5432;Database=${POSTGRES_DB:-dumbo};Username=${POSTGRES_USER:-dumbo};Password=${POSTGRES_PASSWORD:?Define POSTGRES_PASSWORD en .env};Timeout=3;Command Timeout=5"
     ports:
       - "127.0.0.1:${API_PORT:-5080}:8080"

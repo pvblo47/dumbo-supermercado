@@ -98,7 +98,9 @@ jobs:
           }
           trap cleanup EXIT
           docker network create dumbo-smoke
-          docker run -d --name dumbo-api-smoke --network dumbo-smoke dumbo-api:ci
+          docker run -d --name dumbo-api-smoke --network dumbo-smoke \
+            -e Jwt__Key=clave-solo-para-ci-0123456789-0123456789-abcdef \
+            dumbo-api:ci
           docker run -d --name dumbo-web-smoke --network dumbo-smoke -e API_UPSTREAM=http://dumbo-api-smoke:8080 dumbo-web:ci
           docker exec dumbo-web-smoke nginx -t
           for attempt in $(seq 1 20); do
