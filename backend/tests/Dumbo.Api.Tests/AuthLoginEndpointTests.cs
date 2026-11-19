@@ -25,6 +25,7 @@ public sealed class AuthLoginEndpointTests
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
             builder.UseEnvironment("Development");   // allows the ephemeral JWT signing key
+            builder.UseSetting("Email:WorkerEnabled", "false"); 
             builder.ConfigureServices(services =>
             {
                 services.RemoveAll<IAccountLookup>();

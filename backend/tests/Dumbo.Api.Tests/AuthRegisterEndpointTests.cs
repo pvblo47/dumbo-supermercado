@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Hosting;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Dumbo.Application.Abstractions;
@@ -19,13 +20,16 @@ public sealed class AuthRegisterEndpointTests
     // Spins up the full API in memory while replacing the real store and hasher with test fakes.
     private static WebApplicationFactory<Program> CreateFactory(FakeAccountStore store) =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.UseSetting("Email:WorkerEnabled", "false");  
             builder.ConfigureServices(services =>
             {
                 services.RemoveAll<IAccountStore>();
                 services.AddSingleton<IAccountStore>(store);
                 services.RemoveAll<IAccountPasswordHasher>();
                 services.AddSingleton<IAccountPasswordHasher, FakePasswordHasher>();
-            }));
+            });
+        });
 
     // NF02 and RF-002: self-registration only creates Clients; any requested role in the payload
     // must be ignored so privilege escalation cannot occur.

@@ -1,33 +1,34 @@
 using Dumbo.Api.Extensions;
+using Dumbo.Api.Workers;
 using Dumbo.Application.Accounts;
 using Dumbo.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Service registration (all "builder.Services.Add..." calls must occur BEFORE Build())
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
 
-// Infrastructure layer: PostgreSQL, account store and queries, password hasher, and JWT issuer.
+
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// JWT token validation and role-based authorization (RF-001, NF02).
 builder.Services.AddDumboJwtAuthentication();
+builder.Services.AddScoped<RegisterClientUseCase>();  
+builder.Services.AddScoped<LoginUseCase>();                   
+builder.Services.AddScoped<GetCurrentAccountUseCase>();      
+builder.Services.AddScoped<RequestPasswordRecoveryUseCase>();   
+builder.Services.AddScoped<SetPasswordWithTokenUseCase>();     
+builder.Services.AddScoped<ProcessEmailOutboxUseCase>();        
 
-// Application layer use cases (scoped per HTTP request).
-builder.Services.AddScoped<RegisterClientUseCase>();        // RF-002 self-service registration
-builder.Services.AddScoped<LoginUseCase>();                 // RF-001 sign-in
-builder.Services.AddScoped<GetCurrentAccountUseCase>();     // current session account
+builder.Services.AddHostedService<EmailOutboxWorker>();
 
-
-// HTTP pipeline (all "app.Use..." / "app.Map..." calls must occur AFTER Build())
 var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
-// Order matters: authenticate the caller first, then authorize what they can access.
+// Order matters: authenticate caller identity first, then enforce authorization rules.
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -40,5 +41,5 @@ app.MapControllers();
 
 app.Run();
 
-// Exposes the entry point for integration tests (WebApplicationFactory<Program>).
+// Exposed partial entry point for integration tests (WebApplicationFactory<Program>).
 public partial class Program;

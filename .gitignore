@@ -25,6 +25,9 @@
 .DS_Store
 Thumbs.db
 
+#Correos de desarrollo
+dev-mail/
+
 # Editores: se comparte solo la configuracion del proyecto
 .vscode/*
 !.vscode/extensions.json
