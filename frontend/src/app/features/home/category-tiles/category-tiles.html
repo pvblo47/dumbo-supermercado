@@ -1,0 +1,26 @@
+<section class="categories" appReveal aria-labelledby="categorias-title">
+  <div class="section-head">
+    <div>
+      <span class="kicker"><app-decor kind="leaf" class="kicker-leaf" />CATEGORÍAS</span>
+      <h2 id="categorias-title">Explora por <span class="hl">categoría<app-decor kind="underline" class="underline" /></span></h2>
+    </div>
+  </div>
+  <ul class="cat-grid" role="list">
+    @for (category of categories(); track category.key) {
+      <li appReveal [style.--i]="$index">
+        <a
+          class="tile"
+          routerLink="/catalogo"
+          [queryParams]="{ categoria: category.name }"
+          [style.--tile-bg]="tone(category.index).bg"
+          [style.--tile-accent]="tone(category.index).accent"
+        >
+          <app-decor kind="blob-a" class="tile-blob" />
+          <app-category-icon class="tile-icon" [category]="category.name" />
+          <span class="tile-name">{{ category.name }}</span>
+          <span class="tile-count">{{ category.count }} {{ category.count === 1 ? 'producto' : 'productos' }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</section>

@@ -26,14 +26,14 @@ flowchart LR
 
 ## Preparación
 
-1. Confirmar IP privadas, conectividad entre las tres VM y acceso de administración. No se han fijado direcciones reales ni se ha accedido a servidores en esta tarea.
-2. Publicar imágenes versionadas de frontend y API mediante el [CI preparado para Docker Hub](PUBLICACION_DOCKERHUB.md), con su token configurado y el PR integrado en `main`. Verificar ambas imágenes en el registro antes de usarlas; el CD a las VM sigue pendiente.
+1. Confirmar IP privadas, conectividad entre las tres VM y acceso de administración. En el laboratorio verificado se usan frontend `192.168.56.11`, backend `192.168.56.12` y PostgreSQL `192.168.56.13`.
+2. Publicar imágenes versionadas de frontend y API mediante el [CI de Docker Hub](PUBLICACION_DOCKERHUB.md), con su token configurado y el PR integrado en `main`. La publicación y el despliegue manual ya se comprobaron. La [guía de Watchtower](WATCHTOWER.md) describe los overrides opcionales y la demostración pendiente de actualización automática.
 3. En cada VM, copiar solo su carpeta de `deploy/vm-*`, renombrar `.env.example` a `.env` y completar los valores vacíos. No compartir archivos con claves en Git.
 
 | Archivo de configuración | Valores necesarios |
 | --- | --- |
 | Frontend | `FRONTEND_IMAGE`, `FRONTEND_BIND_ADDRESS` y `API_UPSTREAM`. |
-| Backend | `BACKEND_IMAGE`, `BACKEND_BIND_ADDRESS` y `DB_CONNECTION_STRING`. |
+| Backend | `BACKEND_IMAGE`, `BACKEND_BIND_ADDRESS` , `DB_CONNECTION_STRING` y `JWT_KEY`. |
 | Base de datos | `DB_BIND_ADDRESS`, base, usuario y `POSTGRES_PASSWORD`. |
 
 `API_UPSTREAM` debe ser `http://IP_PRIVADA_VM_BACKEND:8080`, sin `/` final. `DB_CONNECTION_STRING` usa como Host la IP o DNS privado de la VM de BD; no `localhost` ni el nombre Docker `db` de otra máquina.
@@ -66,6 +66,6 @@ Comprobar `/api/health` y `/api/health/ready` **a través de la dirección web d
 
 Las tres VM son un reparto por servicio; no equivalen a VM DEV y VM PROD. Mantener por ambiente imágenes, configuración, claves, puertos y volúmenes separados. Para PROD, cambiar también `APP_ENVIRONMENT` a `Production` en la VM backend y los nombres de proyecto de sus archivos locales. Este acuerdo no exige por sí solo seis VM: la infraestructura disponible y el aislamiento entre ambientes deben concretarse con el profesor.
 
-Estas plantillas no despliegan automáticamente ni configuran HTTPS, usuarios SQL de ejecución, respaldos o aislamiento de red. No incluyen todavía almacenamiento de imágenes de producto, worker de reportes ni base analítica. Sus ubicaciones y recursos se resolverán al implementar esos módulos, conservando la separación confirmada de frontend, API y PostgreSQL.
+Los Compose base requieren arranque manual. Los overrides de Watchtower permiten seguir nuevas publicaciones de frontend y API; no actualizan PostgreSQL ni ejecutan migraciones. Estas plantillas no configuran HTTPS, usuarios SQL de ejecución, respaldos o aislamiento de red. No incluyen todavía almacenamiento de imágenes de producto, worker de reportes ni base analítica. Sus ubicaciones y recursos se resolverán al implementar esos módulos, conservando la separación confirmada de frontend, API y PostgreSQL.
 
 La imagen frontend admite el backend privado con `API_UPSTREAM`, usando el [mecanismo de plantillas de la imagen oficial Nginx](https://github.com/nginx/docker-nginx/blob/master/entrypoint/20-envsubst-on-templates.sh). La red entre máquinas debe configurarse aparte de las [redes locales de Compose](https://docs.docker.com/compose/how-tos/networking/).

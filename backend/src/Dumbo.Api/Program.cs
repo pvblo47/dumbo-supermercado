@@ -1,20 +1,37 @@
+using Dumbo.Api.Extensions;
+using Dumbo.Api.Workers;
+using Dumbo.Application.Accounts;
 using Dumbo.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
+
+
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddDumboJwtAuthentication();
+builder.Services.AddScoped<RegisterClientUseCase>();  
+builder.Services.AddScoped<LoginUseCase>();                   
+builder.Services.AddScoped<GetCurrentAccountUseCase>();      
+builder.Services.AddScoped<RequestPasswordRecoveryUseCase>();   
+builder.Services.AddScoped<SetPasswordWithTokenUseCase>();     
+builder.Services.AddScoped<ProcessEmailOutboxUseCase>();        
+
+builder.Services.AddHostedService<EmailOutboxWorker>();
+
 var app = builder.Build();
+
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
-// Configure the HTTP request pipeline.
+// Order matters: authenticate caller identity first, then enforce authorization rules.
+app.UseAuthentication();
+app.UseAuthorization();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -24,5 +41,5 @@ app.MapControllers();
 
 app.Run();
 
-// Punto de entrada accesible para las pruebas de integracion.
+// Exposed partial entry point for integration tests (WebApplicationFactory<Program>).
 public partial class Program;
