@@ -1,0 +1,85 @@
+<section class="catalog" aria-labelledby="catalog-title" [attr.aria-busy]="state() === 'loading'">
+  <div class="heading">
+    <app-decor kind="blob-a" class="heading-blob" />
+    <app-decor kind="blob-b" class="heading-blob two" />
+    <span class="kicker"><app-decor kind="leaf" class="kicker-leaf" />CATÁLOGO</span>
+    <h1 id="catalog-title">{{ categoryName() ?? 'Todos los productos' }}</h1>
+    <p class="count" aria-live="polite">
+      @switch (state()) {
+        @case ('loading') { Cargando productos... }
+        @case ('ready') { {{ visibleProducts().length }} {{ visibleProducts().length === 1 ? 'producto' : 'productos' }} en {{ categoryName() ?? 'el catálogo' }} }
+        @default { &nbsp; }
+      }
+    </p>
+    @if (categories().length) {
+      <nav class="chips" aria-label="Categorías">
+        <a class="chip" routerLink="/catalogo" [class.active]="!categoryParam()" [attr.aria-current]="!categoryParam() ? 'true' : null">Todos</a>
+        @for (category of categories(); track category.key) {
+          <a class="chip" routerLink="/catalogo" [queryParams]="{ categoria: category.name }" [class.active]="category.key === activeKey()" [attr.aria-current]="category.key === activeKey() ? 'true' : null">{{ category.name }} ({{ category.count }})</a>
+        }
+      </nav>
+    }
+  </div>
+
+  @switch (state()) {
+    @case ('loading') {
+      <div class="grid" aria-hidden="true">
+        @for (i of skeletons; track i) {
+          <div class="card skeleton"><span class="sk photo"></span><span class="sk line short"></span><span class="sk line"></span><span class="sk price"></span><span class="sk tag"></span></div>
+        }
+      </div>
+    }
+    @case ('error') {
+      <div class="message error" role="alert">
+        <h2>No pudimos cargar los productos</h2>
+        <p>{{ errorMessage() }}</p>
+        <button type="button" class="primary" (click)="load()">Reintentar</button>
+      </div>
+    }
+    @case ('empty') {
+      @if (categoryParam() && products().length) {
+        <div class="message">
+          <h2>No hay productos en esta categoría</h2>
+          <p>Puedes revisar el resto del catálogo.</p>
+          <a class="secondary" routerLink="/catalogo">Ver todos los productos</a>
+        </div>
+      } @else {
+        <div class="message">
+          <h2>Aún no hay productos en el catálogo</h2>
+          <p>Cuando se agreguen productos aparecerán aquí.</p>
+          <button type="button" class="secondary" (click)="load()">Actualizar</button>
+        </div>
+      }
+    }
+    @case ('ready') {
+      <ul class="grid content-in" role="list">
+        @for (product of visibleProducts(); track product.id; let i = $index) {
+          <li class="card" data-qv-card appReveal [class.is-out]="product.stock <= 0" [style.--i]="i" [style.view-transition-name]="i < namedCards ? 'product-' + product.id : null">
+            <div class="media">
+              @if (product.imageUrl) {
+                <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+              } @else {
+                <span class="no-image">Sin imagen</span>
+              }
+            </div>
+            <div class="copy">
+              <span class="pill" [style.--tone-bg]="toneBg(product)">{{ product.category }}</span>
+              <h2>{{ product.name }}</h2>
+              <p class="presentation">{{ product.presentation }}</p>
+              <strong class="price">{{ formatPrice(product.price) }}</strong>
+              @if (product.stock > 0) {
+                <span class="availability">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+                  Disponible
+                </span>
+              } @else {
+                <span class="availability out">Sin stock</span>
+              }
+            </div>
+            <button type="button" class="hit" (click)="openQuickView(product, $event)"><span class="sr-only">Ver detalle de {{ product.name }}</span></button>
+          </li>
+        }
+      </ul>
+    }
+  }
+</section>

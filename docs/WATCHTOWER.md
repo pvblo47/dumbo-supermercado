@@ -18,7 +18,7 @@ Desde la carpeta de la aplicación, validar con `sudo docker compose config --qu
 2. Revisar esta rama, integrar en dev y promover dev a main mediante otro PR. Mantener las aprobaciones y checks. Quien hizo el último push no debe ser quien satisfaga su aprobación; el autor tampoco puede autoaprobarse.
 3. Verificar que Actions terminó las pruebas y publicó ambas imágenes. No ejecutar compose up ni pull manualmente durante la demostración.
 4. Esperar las revisiones periódicas de Watchtower. Conservar logs con `Updated=1`, los nuevos IDs de contenedor y sus revisiones OCI coincidentes con el commit publicado.
-5. Abrir la página sin caché: debe aparecer «Comprobemos la conexión.» y «Versión 0.1.1». `/api/health` debe devolver versión 0.1.1 y `/api/health/ready` debe mantener HTTP 200 y database=up.
+5. Abrir `/estado` sin caché (la pantalla de estado no aparece en el menú): debe aparecer «Comprobemos la conexión.» y «Versión 0.1.1». `/api/health` debe devolver versión 0.1.1 y `/api/health/ready` debe mantener HTTP 200 y database=up.
 
 Las dos VM actualizan de manera independiente; puede haber un intervalo con versiones distintas. Watchtower no valida el contrato entre versiones ni garantiza rollback automático. Mantener cambios compatibles entre frontend y backend; coordinar migraciones aparte. No equivale a disponibilidad sin interrupciones.
 

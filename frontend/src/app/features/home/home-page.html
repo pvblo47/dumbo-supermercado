@@ -1,0 +1,161 @@
+@switch (state()) {
+  @case ('loading') {
+    <section class="hero" aria-busy="true" aria-label="Cargando destacados">
+      <div class="slides"><div class="slide-grid theme-economicos skeleton-hero" aria-hidden="true">
+        <div class="copy">
+          <span class="sk light kicker-sk"></span>
+          <span class="sk light title-sk"></span>
+          <span class="sk light title-sk short"></span>
+          <span class="sk light text-sk"></span>
+          <span class="sk light button-sk"></span>
+        </div>
+        <div class="panel">
+          <div class="hero-card skeleton-card"><span class="sk photo-sk"></span><span class="sk line-sk"></span><span class="sk price-sk"></span></div>
+          <div class="hero-card skeleton-card"><span class="sk photo-sk"></span><span class="sk line-sk"></span><span class="sk price-sk"></span></div>
+        </div>
+      </div></div>
+    </section>
+    <section class="economicos" aria-busy="true" aria-label="Cargando los más económicos">
+      <div class="economicos-grid" aria-hidden="true">
+        @for (i of skeletons; track i) {
+          <div class="eco-card skeleton-eco"><span class="sk eco-photo"></span><span class="eco-copy"><span class="sk line-sk"></span><span class="sk price-sk"></span></span></div>
+        }
+      </div>
+    </section>
+  }
+  @case ('error') {
+    <div class="message error" role="alert">
+      <h2>No pudimos cargar los productos</h2>
+      <p>{{ errorMessage() }}</p>
+      <button type="button" class="primary" (click)="load()">Reintentar</button>
+    </div>
+  }
+  @case ('empty') {
+    <div class="message">
+      <h2>Aún no hay productos disponibles</h2>
+      <p>Cuando se agreguen productos podrás verlos en el catálogo.</p>
+      <a class="secondary" routerLink="/catalogo">Ver catálogo</a>
+    </div>
+  }
+  @case ('ready') {
+    <section class="hero content-in" aria-roledescription="carrusel" aria-label="Destacados de Dumbo" [class.paused]="paused()">
+      <div class="slides">
+      @for (slide of slides(); track slide.id; let i = $index) {
+        <div
+          class="slide-grid theme-{{ slide.id }}"
+          [class.is-active]="i === current()"
+          role="group"
+          aria-roledescription="diapositiva"
+          [attr.aria-label]="(i + 1) + ' de ' + slides().length"
+          [attr.aria-hidden]="i === current() ? null : 'true'"
+          [attr.inert]="i === current() ? null : ''"
+        >
+          <app-decor kind="blob-a" class="blob blob-1" />
+          <app-decor kind="blob-b" class="blob blob-2" />
+          <app-decor kind="leaf" class="leaf leaf-1" />
+          <app-decor kind="leaf" class="leaf leaf-2" />
+          <div class="copy">
+            <span class="hero-kicker">{{ slide.kicker }}</span>
+            <h1>{{ slide.titleLines[0] }}<br />{{ slide.titleLines[1] }}</h1>
+            <p>{{ slide.text }}</p>
+            <div class="actions">
+              @if (slide.ctaPath) {
+                <a class="cta" [routerLink]="slide.ctaPath" [queryParams]="slide.ctaQuery">{{ slide.ctaLabel }}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a>
+              } @else {
+                <button type="button" class="cta" (click)="scrollToEconomicos()">{{ slide.ctaLabel }}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button>
+              }
+              <a class="link" routerLink="/catalogo">Explorar todos los productos</a>
+            </div>
+          </div>
+          @if (slide.products.length) {
+            <ul class="panel" role="list">
+              @for (product of slide.products; track product.id) {
+                <li class="hero-card">
+                  <div class="hero-media">
+                    @if (product.imageUrl) {
+                      <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+                    } @else {
+                      <span class="no-image">Sin imagen</span>
+                    }
+                  </div>
+                  <h2>{{ product.name }}</h2>
+                  <p class="presentation">{{ product.presentation }}</p>
+                  <strong class="price">{{ formatPrice(product.price) }}</strong>
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="panel empty-panel" aria-hidden="true"></div>
+          }
+        </div>
+      }
+      </div>
+
+      @if (multiple()) {
+        <button type="button" class="arrow prev" aria-label="Diapositiva anterior" (click)="previous()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
+        </button>
+        <button type="button" class="arrow next" aria-label="Diapositiva siguiente" (click)="next()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+        </button>
+        <div class="controls" [style.--slide-interval]="intervalMs + 'ms'">
+          <button type="button" class="bar-arrow" aria-label="Diapositiva anterior" (click)="previous()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg></button>
+          <div class="dots">
+            @for (slide of slides(); track slide.id; let i = $index) {
+              <button
+                type="button"
+                class="dot"
+                [class.active]="i === current()"
+                [attr.aria-label]="'Ir a la diapositiva ' + (i + 1)"
+                [attr.aria-current]="i === current() ? 'true' : null"
+                (click)="goTo(i)"
+              ></button>
+            }
+          </div>
+          <span class="counter" aria-live="off">{{ current() + 1 }} / {{ slides().length }}</span>
+          <button type="button" class="bar-arrow" aria-label="Diapositiva siguiente" (click)="next()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg></button>
+          <button type="button" class="pause" [attr.aria-label]="paused() ? 'Reanudar avance automático' : 'Pausar avance automático'" (click)="togglePause()">
+            {{ paused() ? 'Reanudar' : 'Pausar' }}
+          </button>
+        </div>
+      }
+    </section>
+
+    @if (categories().length) {
+      <app-category-tiles [categories]="categories()" />
+    }
+
+    @if (economicos().length) {
+      <section id="economicos" class="economicos" appReveal aria-labelledby="economicos-title">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><app-decor kind="leaf" class="kicker-leaf" />PARA EMPEZAR TU LISTA</span>
+            <h2 id="economicos-title">Los más <span class="hl">económicos<app-decor kind="underline" class="underline" /></span></h2>
+          </div>
+          <a class="see-all" routerLink="/catalogo">Ver catálogo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a>
+        </div>
+        <ul class="economicos-grid" role="list">
+          @for (product of economicos(); track product.id; let i = $index) {
+            <li class="eco-card" data-qv-card appReveal [style.--i]="i">
+              <div class="eco-media">
+                @if (product.imageUrl) {
+                  <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+                } @else {
+                  <span class="no-image">Sin imagen</span>
+                }
+              </div>
+              <div class="eco-copy">
+                @if (product.price === cheapestPrice()) { <span class="best">Mejor precio</span> }
+                <h3>{{ product.name }}</h3>
+                <p class="presentation">{{ product.presentation }}</p>
+                <strong class="price">{{ formatPrice(product.price) }}</strong>
+              </div>
+              <button type="button" class="hit" (click)="openQuickView(product, $event)"><span class="sr-only">Ver detalle de {{ product.name }}</span></button>
+            </li>
+          }
+        </ul>
+        <p class="note">Selección según el precio de la presentación completa.</p>
+      </section>
+    }
+  }
+}

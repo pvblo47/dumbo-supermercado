@@ -1,0 +1,36 @@
+@if (view.active(); as item) {
+  <div class="backdrop" (click)="onBackdrop($event)">
+    <section #panel class="panel" role="dialog" aria-modal="true" aria-labelledby="qv-title" (keydown)="trap($event)">
+      <span class="handle" aria-hidden="true"></span>
+      <button #closeButton type="button" class="close" aria-label="Cerrar vista rápida" (click)="view.close()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+      </button>
+      <div class="media">
+        @if (item.product.imageUrl) {
+          <img [src]="item.product.imageUrl" [alt]="item.product.name" style="view-transition-name: qv-image" />
+        } @else {
+          <span class="no-image">Sin imagen</span>
+        }
+      </div>
+      <div class="body">
+        <span class="pill" [style.--tone-bg]="tone(item.toneIndex)">{{ item.product.category }}</span>
+        <h2 id="qv-title">{{ item.product.name }}</h2>
+        <p class="presentation">{{ item.product.presentation }}</p>
+        <strong class="price">{{ price(item.product.price) }}</strong>
+        @if (item.product.stock > 0) {
+          <span class="availability">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+            Disponible
+          </span>
+        } @else {
+          <span class="availability out">Sin stock</span>
+        }
+        <p class="sku">Código {{ item.product.sku }}</p>
+        <a class="more" routerLink="/catalogo" [queryParams]="{ categoria: item.product.category }" (click)="view.close(false)">
+          Ver más de {{ item.product.category }}
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+        </a>
+      </div>
+    </section>
+  </div>
+}

@@ -16,6 +16,7 @@ Punto de entrada para el equipo. Actualizado el 11 de noviembre de 2026; Hito 2:
 | Actualizar frontend y API automáticamente | [Watchtower y demostración CI/CD](WATCHTOWER.md) |
 | Consultar endpoints disponibles | [Contratos de API](CONTRATOS_API.md) |
 | Saber qué está implementado y qué falta | [Validación del ERS](VALIDACION_ERS.md) |
+| Ver pantallas listas y pendientes del frontend | [README del frontend](../frontend/README.md) |
 | Integrar y revisar cambios | [Ramas y aprobaciones](REVISION_Y_APROBACIONES.md) |
 | Identificar originales e historial | [Fuentes y versiones](FUENTES_Y_VERSIONES.md) |
 
