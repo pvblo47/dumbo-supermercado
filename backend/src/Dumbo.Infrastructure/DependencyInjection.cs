@@ -29,6 +29,7 @@ public static class DependencyInjection
             ?? "Host=localhost;Port=5432;Database=dumbo;Username=dumbo;Timeout=3;Command Timeout=5"));
 
         services.AddScoped<IDatabaseReadinessChecker, DatabaseReadinessChecker>();
+        services.AddScoped<IProductCatalog, ProductCatalog>();
 
         //Accounts
         services.AddSingleton<TimeProvider>(TimeProvider.System);
