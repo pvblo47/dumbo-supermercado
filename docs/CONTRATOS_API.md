@@ -8,6 +8,11 @@ Esta guía describe lo que existe y lo que frontend y backend deben acordar ante
 | --- | --- | --- |
 | `GET /api/health` | 200 | Que la API puede responder; no requiere BD. |
 | `GET /api/health/ready` | 200 o 503 | Que la API puede conectarse a PostgreSQL. |
+| `GET /api/products` | 200 | Lista pública de productos. Devuelve `[]` cuando la tabla está vacía. |
+
+El catálogo devuelve una lista de objetos con `id`, `sku`, `name`, `category`, `presentation`, `price`, `stock` e `imageUrl`. `id`, `price` y `stock` son números. `imageUrl` admite `null`.
+
+Aplica la migración `CrearProductos` antes de usar esta ruta. Para una base de demostración, ejecuta `deploy/catalogo-demo.sql` con un usuario autorizado para insertar. Puedes repetir la carga sin duplicar SKU. En la VM, concede al usuario de la API permiso de lectura sobre `products`.
 
 Respuesta de `/api/health`:
 
