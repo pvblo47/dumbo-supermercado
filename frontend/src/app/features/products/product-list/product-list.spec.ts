@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter, Router } from '@angular/router';
@@ -169,6 +169,101 @@ describe('ProductList: estados del catálogo', () => {
       await go(null);
       expect(fixture.nativeElement.querySelectorAll('li.card').length).toBe(4);
       expect(fixture.nativeElement.querySelector('.chip.active').textContent).toContain('Todos');
+    });
+  });
+
+  describe('filtros', () => {
+    const catalog: Product[] = [
+      ...products,
+      { id: 3, sku: 'PAN-003', name: 'Marraqueta', category: 'Panadería', presentation: 'Kilo', price: 2100, stock: 10, imageUrl: null },
+      { id: 4, sku: 'LAC-004', name: 'Leche descremada', category: 'Lácteos', presentation: 'Caja 1 litro', price: 1290, stock: 0, imageUrl: null },
+    ];
+    const names = () => (Array.from(fixture.nativeElement.querySelectorAll('li.card h2')) as HTMLElement[]).map(h => h.textContent!.trim());
+    const go = async (queryParams: Record<string, string | null>) => {
+      await TestBed.inject(Router).navigate([], { queryParams });
+      fixture.detectChanges();
+    };
+    const load = () => {
+      http.expectOne('/api/products').flush(catalog);
+      fixture.detectChanges();
+    };
+
+    it('no muestra la barra mientras no hay productos', () => {
+      http.expectOne('/api/products').flush([]);
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.toolbar')).toBeNull();
+    });
+
+    it('busca por texto desde la URL y muestra cuántos coinciden', async () => {
+      await go({ q: 'leche' });
+      load();
+      expect(names()).toEqual(['Leche entera', 'Leche descremada']);
+      expect(text()).toContain('2 de 4 productos en el catálogo');
+      expect((fixture.nativeElement.querySelector('.search input') as HTMLInputElement).value).toBe('leche');
+    });
+
+    it('combina categoría, stock y orden', async () => {
+      await go({ categoria: 'Lácteos', stock: '1' });
+      load();
+      expect(names()).toEqual(['Leche entera']);
+      await go({ orden: 'precio-desc' });
+      expect(names()).toEqual(['Huevos', 'Marraqueta', 'Leche descremada', 'Leche entera']);
+    });
+
+    it('filtra por rango de precio', async () => {
+      await go({ min: '1200', max: '2500' });
+      load();
+      expect(names()).toEqual(['Marraqueta', 'Leche descremada']);
+    });
+
+    it('lleva los cambios de la barra a la URL conservando la categoría', async () => {
+      await go({ categoria: 'Lácteos' });
+      load();
+      const router = TestBed.inject(Router);
+      const navigate = spyOn(router, 'navigate').and.callThrough();
+      const stock = fixture.nativeElement.querySelector('.switch input') as HTMLInputElement;
+      stock.click();
+      const [, extras] = navigate.calls.mostRecent().args;
+      expect(extras!.queryParams).toEqual(jasmine.objectContaining({ stock: '1' }));
+      expect(extras!.queryParamsHandling).toBe('merge');
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(router.url).toContain('categoria=');
+      expect(names()).toEqual(['Leche entera']);
+    });
+
+    it('espera a que se deje de escribir antes de buscar', fakeAsync(() => {
+      load();
+      const router = TestBed.inject(Router);
+      const navigate = spyOn(router, 'navigate').and.resolveTo(true);
+      const input = fixture.nativeElement.querySelector('.search input') as HTMLInputElement;
+      input.value = 'mar';
+      input.dispatchEvent(new Event('input'));
+      tick(100);
+      expect(navigate).not.toHaveBeenCalled();
+      tick(200);
+      expect(navigate.calls.mostRecent().args[1]!.queryParams).toEqual(jasmine.objectContaining({ q: 'mar' }));
+    }));
+
+    it('muestra un estado vacío propio y permite limpiar los filtros', async () => {
+      await go({ q: 'chocolate', stock: '1' });
+      load();
+      expect(text()).toContain('Ningún producto coincide con los filtros');
+      expect(fixture.nativeElement.querySelector('.badge').textContent.trim()).toBe('2');
+      (fixture.nativeElement.querySelector('.message button') as HTMLButtonElement).click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(names().length).toBe(4);
+      expect(fixture.nativeElement.querySelector('.clear')).toBeNull();
+    });
+
+    it('los chips de categoría conservan los demás filtros', async () => {
+      await go({ q: 'leche' });
+      load();
+      const chip = fixture.nativeElement.querySelectorAll('.chip')[1] as HTMLAnchorElement;
+      const href = decodeURIComponent(chip.getAttribute('href')!);
+      expect(href).toContain('q=leche');
+      expect(href).toContain('categoria=Lácteos');
     });
   });
 });

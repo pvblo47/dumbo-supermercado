@@ -12,6 +12,39 @@ h1 { font-size: 28px; letter-spacing: -.8px; line-height: 1.2; margin: 10px 0 4p
 .chip.active { background: var(--green); border-color: var(--green); color: white; }
 :focus-visible { outline: 3px solid #b16d2f; outline-offset: 3px; }
 
+/* Barra de filtros: buscador, precio, stock y orden. */
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: -8px 0 22px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: white; box-shadow: var(--shadow-soft); }
+.search { position: relative; flex: 1 1 260px; display: flex; align-items: center; }
+.search svg { position: absolute; left: 14px; width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+.search input { width: 100%; min-height: 44px; padding: 0 16px 0 42px; border: 1px solid var(--mint-deep); border-radius: 999px; background: var(--cream); color: var(--ink); font-size: 14px; transition: border-color 200ms ease, background 200ms ease; }
+.search input:hover { border-color: var(--sage); }
+.search input:focus { border-color: var(--green); background: white; }
+.search input::placeholder { color: var(--muted); }
+.toggle-filters { display: none; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 1px solid var(--mint-deep); border-radius: 999px; background: var(--mint); color: var(--green); font-size: 13px; font-weight: 700; cursor: pointer; }
+.toggle-filters svg { width: 18px; height: 18px; }
+.badge { display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--green); color: white; font-size: 11px; }
+.filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.price-range { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0; border: 0; }
+.price-range legend { float: left; margin-right: 6px; font-size: 12px; font-weight: 700; color: var(--muted); }
+.price-range label { position: relative; display: flex; align-items: center; }
+.prefix { position: absolute; left: 12px; font-size: 13px; color: var(--muted); pointer-events: none; }
+.price-range input { width: 104px; min-height: 44px; padding: 0 10px 0 24px; border: 1px solid var(--mint-deep); border-radius: 12px; background: var(--cream); color: var(--ink); font-size: 13px; -moz-appearance: textfield; }
+.price-range input::-webkit-outer-spin-button, .price-range input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.price-range input:focus { border-color: var(--green); background: white; }
+.dash { color: var(--muted); }
+.switch { position: relative; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 13px; color: var(--ink); cursor: pointer; user-select: none; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.track { position: relative; width: 40px; height: 24px; border-radius: 999px; background: var(--mint-deep); transition: background 200ms ease; }
+.thumb { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: white; box-shadow: 0 1px 3px rgba(14, 58, 40, .25); transition: transform 200ms var(--ease-spring); }
+.switch input:checked + .track { background: var(--green); }
+.switch input:checked + .track .thumb { transform: translateX(16px); }
+.switch input:focus-visible + .track { outline: 3px solid #b16d2f; outline-offset: 3px; }
+.sort { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--muted); }
+.sort select { min-height: 44px; padding: 0 34px 0 14px; border: 1px solid var(--mint-deep); border-radius: 999px; background: var(--cream) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2317563b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center / 16px; color: var(--ink); font: 13px Arial, sans-serif; appearance: none; cursor: pointer; }
+.sort select:hover { border-color: var(--sage); }
+.clear { min-height: 44px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: var(--green); font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.clear:hover { background: var(--mint); }
+
 .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; list-style: none; margin: 0; padding: 0; }
 .card { position: relative; border: 1px solid var(--line); border-radius: var(--radius-card); background: white; min-width: 0; }
 .card:not(.skeleton) { transition: opacity 500ms var(--ease-out), translate 500ms var(--ease-out), box-shadow 200ms ease, border-color 200ms ease, transform 200ms ease; transition-delay: calc(min(var(--i, 0), 7) * 60ms), calc(min(var(--i, 0), 7) * 60ms), 0s, 0s, 0s; }
@@ -43,14 +76,26 @@ h1 { font-size: 28px; letter-spacing: -.8px; line-height: 1.2; margin: 10px 0 4p
 .sk.tag { height: 11px; width: 40%; margin-bottom: 6px; }
 @media (prefers-reduced-motion: reduce) {
   .content-in, .message { animation: none; }
-  .card:not(.skeleton), .media img, .chip { transition: none; }
+  .card:not(.skeleton), .media img, .chip, .thumb, .track, .search input { transition: none; }
   .card:not(.skeleton):hover, .card:hover .media img, .chip:active { transform: none; }
 }
 
-@media (max-width: 900px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .toggle-filters { display: inline-flex; }
+  .search { flex-basis: 0; }
+  .filters { display: none; flex-basis: 100%; padding-top: 6px; border-top: 1px solid var(--line); }
+  .filters.open { display: flex; animation: fade-in 200ms ease both; }
+}
 @media (max-width: 650px) {
   .heading { padding: 22px 18px; }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .media { height: 140px; }
   .price { font-size: 20px; }
+  .toolbar { margin-top: -6px; }
+  .filters .price-range { flex-basis: 100%; }
+  .price-range input { width: 100%; }
+  .price-range label { flex: 1; }
+  .sort { flex: 1; }
+  .sort select { flex: 1; }
 }
