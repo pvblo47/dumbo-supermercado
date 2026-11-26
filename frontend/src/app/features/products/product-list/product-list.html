@@ -7,19 +7,68 @@
     <p class="count" aria-live="polite">
       @switch (state()) {
         @case ('loading') { Cargando productos... }
-        @case ('ready') { {{ visibleProducts().length }} {{ visibleProducts().length === 1 ? 'producto' : 'productos' }} en {{ categoryName() ?? 'el catálogo' }} }
+        @case ('ready') {
+          @if (activeFilters()) {
+            {{ visibleProducts().length }} de {{ categoryProducts().length }} {{ categoryProducts().length === 1 ? 'producto' : 'productos' }} en {{ categoryName() ?? 'el catálogo' }}
+          } @else {
+            {{ visibleProducts().length }} {{ visibleProducts().length === 1 ? 'producto' : 'productos' }} en {{ categoryName() ?? 'el catálogo' }}
+          }
+        }
         @default { &nbsp; }
       }
     </p>
     @if (categories().length) {
       <nav class="chips" aria-label="Categorías">
-        <a class="chip" routerLink="/catalogo" [class.active]="!categoryParam()" [attr.aria-current]="!categoryParam() ? 'true' : null">Todos</a>
+        <a class="chip" routerLink="/catalogo" [queryParams]="{ categoria: null }" queryParamsHandling="merge" [class.active]="!categoryParam()" [attr.aria-current]="!categoryParam() ? 'true' : null">Todos</a>
         @for (category of categories(); track category.key) {
-          <a class="chip" routerLink="/catalogo" [queryParams]="{ categoria: category.name }" [class.active]="category.key === activeKey()" [attr.aria-current]="category.key === activeKey() ? 'true' : null">{{ category.name }} ({{ category.count }})</a>
+          <a class="chip" routerLink="/catalogo" [queryParams]="{ categoria: category.name }" queryParamsHandling="merge" [class.active]="category.key === activeKey()" [attr.aria-current]="category.key === activeKey() ? 'true' : null">{{ category.name }} ({{ category.count }})</a>
         }
       </nav>
     }
   </div>
+
+  @if (products().length) {
+    <form class="toolbar" role="search" aria-label="Filtrar productos" (submit)="submitSearch($event, search.value)">
+      <label class="search">
+        <span class="sr-only">Buscar productos</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+        <input #search type="search" name="q" placeholder="Buscar productos" autocomplete="off" [value]="filters().query" (input)="onSearch(search.value)" />
+      </label>
+      <button type="button" class="toggle-filters" [attr.aria-expanded]="filtersOpen()" aria-controls="catalog-filters" (click)="filtersOpen.set(!filtersOpen())">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" /></svg>
+        Filtros
+        @if (activeFilters()) { <span class="badge">{{ activeFilters() }}</span> }
+      </button>
+      <div id="catalog-filters" class="filters" [class.open]="filtersOpen()">
+        <fieldset class="price-range">
+          <legend>Precio</legend>
+          <label><span class="sr-only">Precio mínimo</span><span class="prefix" aria-hidden="true">$</span>
+            <input #min type="number" name="min" inputmode="numeric" min="0" step="10" [placeholder]="bounds()?.min ?? 'Mín.'" [value]="filters().minPrice ?? ''" (change)="onPrice('minPrice', min.value)" />
+          </label>
+          <span class="dash" aria-hidden="true">–</span>
+          <label><span class="sr-only">Precio máximo</span><span class="prefix" aria-hidden="true">$</span>
+            <input #max type="number" name="max" inputmode="numeric" min="0" step="10" [placeholder]="bounds()?.max ?? 'Máx.'" [value]="filters().maxPrice ?? ''" (change)="onPrice('maxPrice', max.value)" />
+          </label>
+        </fieldset>
+        <label class="switch">
+          <input #stock type="checkbox" name="stock" [checked]="filters().inStock" (change)="onStock(stock.checked)" />
+          <span class="track" aria-hidden="true"><span class="thumb"></span></span>
+          Solo con stock
+        </label>
+        <label class="sort">
+          <span>Ordenar</span>
+          <select #sort name="orden" [value]="filters().sort" (change)="onSort(sort.value)">
+            @for (option of sortOptions; track option.value) {
+              <option [value]="option.value" [selected]="option.value === filters().sort">{{ option.label }}</option>
+            }
+          </select>
+        </label>
+        @if (activeFilters()) {
+          <button type="button" class="clear" (click)="clearFilters(); search.value = ''">Limpiar filtros</button>
+        }
+      </div>
+    </form>
+  }
 
   @switch (state()) {
     @case ('loading') {
@@ -37,7 +86,13 @@
       </div>
     }
     @case ('empty') {
-      @if (categoryParam() && products().length) {
+      @if (activeFilters() && categoryProducts().length) {
+        <div class="message">
+          <h2>Ningún producto coincide con los filtros</h2>
+          <p>Prueba con otra búsqueda o amplía el rango de precio.</p>
+          <button type="button" class="secondary" (click)="clearFilters()">Limpiar filtros</button>
+        </div>
+      } @else if (categoryParam() && products().length) {
         <div class="message">
           <h2>No hay productos en esta categoría</h2>
           <p>Puedes revisar el resto del catálogo.</p>

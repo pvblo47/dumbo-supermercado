@@ -26,10 +26,13 @@
           <span class="availability out">Sin stock</span>
         }
         <p class="sku">Código {{ item.product.sku }}</p>
-        <a class="more" routerLink="/catalogo" [queryParams]="{ categoria: item.product.category }" (click)="view.close(false)">
-          Ver más de {{ item.product.category }}
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
-        </a>
+        <div class="actions">
+          <a class="detail" [routerLink]="['/catalogo/producto', item.product.id]" (click)="view.close(false)">Ver ficha del producto</a>
+          <a class="more" routerLink="/catalogo" [queryParams]="{ categoria: item.product.category }" (click)="view.close(false)">
+            Ver más de {{ item.product.category }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+          </a>
+        </div>
       </div>
     </section>
   </div>

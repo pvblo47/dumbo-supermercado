@@ -13,6 +13,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/products/product-list/product-list').then(m => m.ProductList),
     title: 'Dumbo · Catálogo',
   },
+  {
+    path: 'catalogo/producto/:id',
+    loadComponent: () => import('./features/products/product-detail/product-detail').then(m => m.ProductDetail),
+    title: 'Dumbo · Producto',
+  },
   // Sin enlace en la navegación: se abre solo con la URL /estado.
   { path: 'estado', component: SystemStatusPage, title: 'Dumbo · Estado del sistema' },
   { path: '**', redirectTo: '' },
