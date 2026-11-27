@@ -43,23 +43,17 @@ public sealed class UpdateClientUseCase(
         client.Phone = data.Phone;
         client.UpdatedAt = clock.GetUtcNow().UtcDateTime;
 
-        // Save the account first: enqueueing an email shares the same DbContext and would otherwise
-        // flush entity changes before unique-email conflict handling runs
-        if (!await store.TrySaveAsync(cancellationToken))
-            return EmailTaken();
+        var pendingEmail = emailChanged && client.Status == UserStatus.PendingActivation
+            && !await outbox.HasPendingAsync(client.Id, ActivationTokenType.AccountActivation, cancellationToken)
+                ? EmailOutboxItem.Create(client.Id, client.Email, ActivationTokenType.AccountActivation, client.UpdatedAt.Value)
+                : null;
 
-        // For pending accounts whose email changed, queue an activation email to the new address
-        // (issuing a new token invalidates prior ones, and the worker reads the current account email).
-        if (emailChanged && client.Status == UserStatus.PendingActivation
-            && !await outbox.HasPendingAsync(client.Id, ActivationTokenType.AccountActivation, cancellationToken))
+        return (await store.SaveAsync(cancellationToken, pendingEmail)) switch
         {
-            await outbox.EnqueueAsync(
-                EmailOutboxItem.Create(
-                    client.Id, client.Email, ActivationTokenType.AccountActivation, client.UpdatedAt.Value),
-                cancellationToken);
-        }
-
-        return new UpdateClientResult(UpdateClientOutcome.Updated, client.ToSummary());
+            AccountSaveOutcome.Saved => new UpdateClientResult(UpdateClientOutcome.Updated, client.ToSummary()),
+            AccountSaveOutcome.EmailTaken => EmailTaken(),
+            _ => new UpdateClientResult(UpdateClientOutcome.ChangedConcurrently)
+        };
     }
 
     private static UpdateClientResult EmailTaken() =>

@@ -39,15 +39,16 @@ public sealed class ChangeClientStatusUseCase(IClientAdminStore store, IEmailOut
         {
             account.Status = target;
             account.UpdatedAt = now;
-            await store.TrySaveAsync(cancellationToken);   // Persist status change before enqueueing outbox item
-        }
+            account.SessionVersion = Guid.NewGuid();
+            var pendingEmail = resendActivation
+                && !await outbox.HasPendingAsync(account.Id, ActivationTokenType.AccountActivation, cancellationToken)
+                    ? EmailOutboxItem.Create(account.Id, account.Email, ActivationTokenType.AccountActivation, now)
+                    : null;
 
-        if (resendActivation
-            && !await outbox.HasPendingAsync(account.Id, ActivationTokenType.AccountActivation, cancellationToken))
-        {
-            await outbox.EnqueueAsync(
-                EmailOutboxItem.Create(account.Id, account.Email, ActivationTokenType.AccountActivation, now),
-                cancellationToken);
+            var saved = await store.SaveAsync(cancellationToken, pendingEmail,
+                invalidateLinksFor: target == UserStatus.Disabled ? account : null);
+            if (saved != AccountSaveOutcome.Saved)
+                return new ChangeClientStatusResult(ChangeClientStatusOutcome.ChangedConcurrently);
         }
 
         return new ChangeClientStatusResult(ChangeClientStatusOutcome.Changed, account.ToSummary());

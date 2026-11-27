@@ -21,6 +21,7 @@ public sealed class User
 
     public UserRole Role { get; set; } = UserRole.Client;
     public UserStatus Status { get; set; } = UserStatus.PendingActivation;
+    public Guid SessionVersion { get; set; }
 
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

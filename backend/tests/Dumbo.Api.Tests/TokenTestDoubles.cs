@@ -49,19 +49,20 @@ internal sealed class InMemoryTokenStore(FakeAccountLookup users) : IActivationT
         return Task.CompletedTask;
     }
 
-    public Task<bool> RedeemAsync(Guid tokenId, Guid userId, string passwordHash, UserStatus newStatus, DateTime now,
-        CancellationToken cancellationToken)
+    public Task<bool> RedeemAsync(Guid tokenId, Guid userId, string passwordHash, UserStatus expectedStatus,
+        Guid expectedSessionVersion, DateTime now, CancellationToken cancellationToken)
     {
-        var token = Tokens.FirstOrDefault(t => t.Id == tokenId && !t.IsUsed && t.ExpiresAt > now);
-        if (token is null)
+        var token = Tokens.FirstOrDefault(t => t.Id == tokenId && t.UserId == userId && !t.IsUsed && t.ExpiresAt > now);
+        var user = users.Users.FirstOrDefault(u => u.Id == userId);
+        if (token is null || user is null || user.Status != expectedStatus || user.SessionVersion != expectedSessionVersion)
             return Task.FromResult(false);
 
         token.IsUsed = true;
         token.UsedAt = now;
 
-        var user = users.Users.First(u => u.Id == userId);
         user.PasswordHash = passwordHash;
-        user.Status = newStatus;
+        user.Status = UserStatus.Active;
+        user.SessionVersion = Guid.NewGuid();
         user.UpdatedAt = now;
 
         foreach (var other in Tokens.Where(t => t.UserId == userId && !t.IsUsed && t.ExpiresAt > now))

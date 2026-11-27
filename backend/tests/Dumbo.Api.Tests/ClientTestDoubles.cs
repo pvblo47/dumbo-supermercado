@@ -7,17 +7,19 @@ namespace Dumbo.Api.Tests;
 /// <summary>
 /// In-memory <see cref="IAccountStore"/> backed by <see cref="FakeAccountLookup.Users"/> so client mutations remain visible to auth and session checks
 /// </summary>
-internal sealed class LookupBackedAccountStore(FakeAccountLookup users) : IAccountStore
+internal sealed class LookupBackedAccountStore(FakeAccountLookup users, InMemoryOutbox outbox) : IAccountStore
 {
     public Task<bool> EmailExistsAsync(string normalizedEmail, CancellationToken cancellationToken) =>
         Task.FromResult(users.Users.Any(u => u.Email == normalizedEmail));
 
-    public Task<bool> TryAddAsync(User user, CancellationToken cancellationToken)
+    public Task<bool> TryAddAsync(User user, CancellationToken cancellationToken, EmailOutboxItem? pendingEmail = null)
     {
         if (users.Users.Any(u => u.Email == user.Email))
             return Task.FromResult(false);
 
         users.Users.Add(user);
+        if (pendingEmail is not null)
+            outbox.Items.Add(pendingEmail);
         return Task.FromResult(true);
     }
 }
@@ -26,7 +28,8 @@ internal sealed class LookupBackedAccountStore(FakeAccountLookup users) : IAccou
 /// In-memory <see cref="IClientAdminStore"/> mirroring production query, ordering, search, and
 /// paging behavior over non-deleted clients; returning references directly provides change tracking.
 /// </summary>
-internal sealed class InMemoryClientAdminStore(FakeAccountLookup users) : IClientAdminStore
+internal sealed class InMemoryClientAdminStore(
+    FakeAccountLookup users, InMemoryOutbox outbox, InMemoryTokenStore tokens) : IClientAdminStore
 {
     /// <summary>
     /// Simulates a concurrent unique-email conflict when saving changes.
@@ -37,8 +40,6 @@ internal sealed class InMemoryClientAdminStore(FakeAccountLookup users) : IClien
     /// Captured audit entries recorded during lifecycle actions (D07.7) for test assertions.
     /// </summary>
     public List<AccountAuditEntry> Audit { get; } = [];
-
-    public void AddAudit(AccountAuditEntry entry) => Audit.Add(entry);
 
     public Task<ClientQueryResult> ListAsync(ClientQuery query, CancellationToken cancellationToken)
     {
@@ -71,7 +72,19 @@ internal sealed class InMemoryClientAdminStore(FakeAccountLookup users) : IClien
         Task.FromResult(users.Users.FirstOrDefault(
             u => u.Id == id && u.Role == role && (includeDeleted || u.Status != UserStatus.Deleted)));
 
-    public Task<bool> TrySaveAsync(CancellationToken cancellationToken) => Task.FromResult(!LoseRaceOnSave);
+    public async Task<AccountSaveOutcome> SaveAsync(CancellationToken cancellationToken, EmailOutboxItem? pendingEmail,
+        AccountAuditEntry? audit, User? invalidateLinksFor)
+    {
+        if (LoseRaceOnSave)
+            return AccountSaveOutcome.EmailTaken;
+        if (pendingEmail is not null)
+            outbox.Items.Add(pendingEmail);
+        if (audit is not null)
+            Audit.Add(audit);
+        if (invalidateLinksFor is not null)
+            await tokens.ExpireAllAsync(invalidateLinksFor.Id, invalidateLinksFor.UpdatedAt!.Value, cancellationToken);
+        return AccountSaveOutcome.Saved;
+    }
 
     private static bool Has(string value, string text) => value.Contains(text, StringComparison.OrdinalIgnoreCase);
 }

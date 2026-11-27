@@ -57,19 +57,19 @@ public static class JwtAuthenticationExtensions
     {
         var idText = context.Principal?.FindFirst("sub")?.Value;
         var roleInToken = context.Principal?.FindFirst("role")?.Value;
+        var versionInToken = context.Principal?.FindFirst(JwtSettings.SessionVersionClaim)?.Value;
 
-        if (!Guid.TryParse(idText, out var accountId))
+        if (!Guid.TryParse(idText, out var accountId) || !Guid.TryParse(versionInToken, out var sessionVersion))
         {
-            context.Fail("El token no contiene un identificador de cuenta válido.");
+            context.Fail("El token no contiene una sesión válida.");
             return;
         }
 
         var lookup = context.HttpContext.RequestServices.GetRequiredService<IAccountLookup>();
         var user = await lookup.FindByIdAsync(accountId, context.HttpContext.RequestAborted);
 
-        // Require a fresh login if the token role no longer matches the database, preventing
-        // revoked permissions from remaining active on an existing token.
-        if (user is null || user.Status != UserStatus.Active || user.Role.ToString() != roleInToken)
-            context.Fail("La cuenta ya no está activa o cambió de rol.");
+        if (user is null || user.Status != UserStatus.Active || user.Role.ToString() != roleInToken ||
+            user.SessionVersion != sessionVersion)
+            context.Fail("La sesión ya no está vigente.");
     }
 }

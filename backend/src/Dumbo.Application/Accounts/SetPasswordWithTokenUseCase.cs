@@ -82,7 +82,8 @@ public sealed class SetPasswordWithTokenUseCase(
 
         // Atomic redemption prevents two concurrent requests from consuming the same token.
         var redeemed = await tokens.RedeemAsync(
-            token.Id, token.UserId, hasher.Hash(command.Password!), UserStatus.Active, now, cancellationToken);
+            token.Id, token.UserId, hasher.Hash(command.Password!), token.User.Status, token.User.SessionVersion,
+            clock.GetUtcNow().UtcDateTime, cancellationToken);
 
         return redeemed ? new SetPasswordResult(SetPasswordOutcome.Success) : Invalid();
     }

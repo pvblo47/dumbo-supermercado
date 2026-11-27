@@ -10,7 +10,7 @@ namespace Dumbo.Infrastructure.Persistence;
 /// EF Core implementation of <see cref="IClientAdminStore"/> supporting both client and worker
 /// administration by scoping queries to the requested <see cref="UserRole"/> in one place.
 /// </summary>
-internal sealed class ClientAdminStore(DumboDbContext db) : IClientAdminStore
+internal sealed class ClientAdminStore(DumboDbContext db, IActivationTokenStore tokens) : IClientAdminStore
 {
     // Scopes queries to the target role, optionally including soft-deleted accounts.
     private IQueryable<User> Scope(UserRole role, bool includeDeleted) =>
@@ -54,15 +54,30 @@ internal sealed class ClientAdminStore(DumboDbContext db) : IClientAdminStore
         Guid id, CancellationToken cancellationToken, UserRole role, bool includeDeleted) =>
         Scope(role, includeDeleted).FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
-    public void AddAudit(AccountAuditEntry entry) => db.AccountAudit.Add(entry);
-
-    public async Task<bool> TrySaveAsync(CancellationToken cancellationToken)
+    public async Task<AccountSaveOutcome> SaveAsync(CancellationToken cancellationToken, EmailOutboxItem? pendingEmail,
+        AccountAuditEntry? audit, User? invalidateLinksFor)
     {
+        if (pendingEmail is not null)
+            db.EmailOutbox.Add(pendingEmail);
+        if (audit is not null)
+            db.AccountAudit.Add(audit);
+
+        await using var transaction = invalidateLinksFor is null
+            ? null : await db.Database.BeginTransactionAsync(cancellationToken);
+
         try
         {
-            // Persist status changes and audit entries atomically in a single SaveChanges call.
             await db.SaveChangesAsync(cancellationToken);
-            return true;
+            if (invalidateLinksFor is not null)
+            {
+                await tokens.ExpireAllAsync(invalidateLinksFor.Id, invalidateLinksFor.UpdatedAt!.Value, cancellationToken);
+                await transaction!.CommitAsync(cancellationToken);
+            }
+            return AccountSaveOutcome.Saved;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return AccountSaveOutcome.ChangedConcurrently;
         }
         catch (DbUpdateException ex) when (ex.InnerException is PostgresException
         {
@@ -71,7 +86,7 @@ internal sealed class ClientAdminStore(DumboDbContext db) : IClientAdminStore
         })
         {
             // Another concurrent request claimed the email between the check and SaveChanges.
-            return false;
+            return AccountSaveOutcome.EmailTaken;
         }
     }
 
