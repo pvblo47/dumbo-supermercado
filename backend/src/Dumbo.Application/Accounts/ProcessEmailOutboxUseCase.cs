@@ -51,7 +51,7 @@ public sealed class ProcessEmailOutboxUseCase(
         var (rawToken, tokenHash) = SecureToken.Generate();
         await tokens.ReplaceAsync(user.Id, item.Kind, tokenHash, clock.GetUtcNow().UtcDateTime, cancellationToken);
 
-        var message = AccountEmailTemplates.Build(item.Kind, user.FirstName, item.ToEmail, BuildLink(item.Kind, rawToken));
+        var message = AccountEmailTemplates.Build(item.Kind, user.FirstName, user.Email, BuildLink(item.Kind, rawToken));
 
         try
         {

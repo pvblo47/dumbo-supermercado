@@ -2,6 +2,8 @@ using Dumbo.Api.Extensions;
 using Dumbo.Api.Workers;
 using Dumbo.Application.Accounts;
 using Dumbo.Infrastructure;
+using Dumbo.Application.Clients;
+using Dumbo.Application.EmailOutbox;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +21,16 @@ builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<GetCurrentAccountUseCase>();      
 builder.Services.AddScoped<RequestPasswordRecoveryUseCase>();   
 builder.Services.AddScoped<SetPasswordWithTokenUseCase>();     
-builder.Services.AddScoped<ProcessEmailOutboxUseCase>();        
+builder.Services.AddScoped<ProcessEmailOutboxUseCase>();     
+builder.Services.AddScoped<CreateClientByStaffUseCase>();
+builder.Services.AddScoped<ResendActivationLinkUseCase>();
+builder.Services.AddScoped<ListClientsUseCase>();
+builder.Services.AddScoped<GetClientUseCase>();
+builder.Services.AddScoped<UpdateClientUseCase>();
+builder.Services.AddScoped<ChangeClientStatusUseCase>();   
+builder.Services.AddScoped<ChangeAccountLifecycleUseCase>();
+builder.Services.AddScoped<ListFailedEmailsUseCase>();
+builder.Services.AddScoped<RetryFailedEmailUseCase>();
 
 builder.Services.AddHostedService<EmailOutboxWorker>();
 

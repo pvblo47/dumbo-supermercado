@@ -22,6 +22,54 @@ namespace Dumbo.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Dumbo.Domain.Entities.AccountAuditEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("integer")
+                        .HasColumnName("action");
+
+                    b.Property<Guid>("ActorUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("actor_user_id");
+
+                    b.Property<int>("NewStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("new_status");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("occurred_at");
+
+                    b.Property<int>("PreviousStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("previous_status");
+
+                    b.Property<Guid>("TargetUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("target_user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActorUserId");
+
+                    b.HasIndex("TargetUserId", "OccurredAt")
+                        .HasDatabaseName("ix_account_audit_target");
+
+                    b.ToTable("account_audit", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_account_audit_action", "action IN (1, 2)");
+
+                            t.HasCheckConstraint("ck_account_audit_new_status", "new_status IN (1, 2, 3, 4)");
+
+                            t.HasCheckConstraint("ck_account_audit_previous_status", "previous_status IN (1, 2, 3, 4)");
+                        });
+                });
+
             modelBuilder.Entity("Dumbo.Domain.Entities.ActivationToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -267,6 +315,23 @@ namespace Dumbo.Infrastructure.Persistence.Migrations
 
                             t.HasCheckConstraint("ck_users_status", "status IN (1, 2, 3, 4)");
                         });
+                });
+
+            modelBuilder.Entity("Dumbo.Domain.Entities.AccountAuditEntry", b =>
+                {
+                    b.HasOne("Dumbo.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("ActorUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_account_audit_actor");
+
+                    b.HasOne("Dumbo.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("TargetUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_account_audit_target");
                 });
 
             modelBuilder.Entity("Dumbo.Domain.Entities.ActivationToken", b =>

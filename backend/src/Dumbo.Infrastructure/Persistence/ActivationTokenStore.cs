@@ -74,4 +74,10 @@ internal sealed class ActivationTokenStore(DumboDbContext db) : IActivationToken
         await transaction.CommitAsync(cancellationToken);
         return true;
     }
+
+    /// <inheritdoc />
+    public Task ExpireAllAsync(Guid userId, DateTime now, CancellationToken cancellationToken) =>
+        db.ActivationTokens
+            .Where(t => t.UserId == userId && !t.IsUsed && t.ExpiresAt > now)
+            .ExecuteUpdateAsync(s => s.SetProperty(t => t.ExpiresAt, now), cancellationToken);
 }

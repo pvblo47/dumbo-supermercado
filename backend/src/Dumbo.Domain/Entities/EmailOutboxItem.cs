@@ -126,4 +126,18 @@ public sealed class EmailOutboxItem
         Status = EmailOutboxStatus.Cancelled;
         NextAttemptAt = null;
     }
+
+    /// <summary>
+    /// Manually requeues an exhausted outbox item for immediate delivery by an administrator (D06):
+    /// resets the status to <see cref="EmailOutboxStatus.Pending"/>, clears the attempt counter and
+    /// initial failure timestamp, and schedules <see cref="NextAttemptAt"/> immediately. Preserves
+    /// <see cref="LastError"/> so the prior failure reason remains visible until a delivery succeeds.
+    /// </summary>
+    public void Requeue(DateTime now)
+    {
+        Status = EmailOutboxStatus.Pending;
+        AttemptCount = 0;
+        FirstFailedAt = null;   // Reset the +1/+5/+15 min backoff schedule from zero for the new cycle
+        NextAttemptAt = now;
+    }
 }

@@ -35,6 +35,7 @@ public static class DependencyInjection
         services.AddSingleton<TimeProvider>(TimeProvider.System);
         services.AddSingleton<IAccountPasswordHasher, IdentityAccountPasswordHasher>();
         services.AddScoped<IAccountStore, AccountStore>();
+        services.AddScoped<IClientAdminStore, ClientAdminStore>();
 
         //JWT sign-in
         services.AddScoped<IAccountLookup, AccountLookup>();

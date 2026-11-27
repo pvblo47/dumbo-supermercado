@@ -36,5 +36,16 @@ internal sealed class EmailOutboxStore(DumboDbContext db) : IEmailOutboxStore
             .ToListAsync(cancellationToken);
 
     /// <inheritdoc />
+    public async Task<IReadOnlyList<EmailOutboxItem>> ListFailedAsync(int max, CancellationToken cancellationToken) =>
+        await db.EmailOutbox.AsNoTracking()
+            .Where(x => x.Status == EmailOutboxStatus.Failed)
+            .OrderByDescending(x => x.CreatedAt)
+            .Take(max)
+            .ToListAsync(cancellationToken);
+
+    /// <inheritdoc />
+    public Task<EmailOutboxItem?> FindAsync(Guid id, CancellationToken cancellationToken) =>db.EmailOutbox.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+    /// <inheritdoc />
     public Task SaveChangesAsync(CancellationToken cancellationToken) => db.SaveChangesAsync(cancellationToken);
 }
