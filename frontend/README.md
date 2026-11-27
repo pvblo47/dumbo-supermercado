@@ -21,7 +21,7 @@ Se abre en http://localhost:4200. El proxy de `proxy.conf.json` envía todo lo q
 
 - La aplicación muestra solo datos que entrega la API. No hay productos de ejemplo en el código; los datos de prueba existen únicamente en los archivos `.spec.ts`.
 - Si la API no responde o no tiene productos, la página lo dice con un mensaje claro y un botón para reintentar.
-- No se muestran funciones que todavía no existen, como buscador, carrito o cuenta.
+- No se muestran funciones que todavía no existen, como carrito o cuenta.
 - El diseño sigue el [mockup del Hito 2](https://mockup-dumbo.vercel.app/), que se mantiene como referencia visual en su propio repositorio.
 
 ## Estado actual
@@ -33,16 +33,20 @@ Se abre en http://localhost:4200. El proxy de `proxy.conf.json` envía todo lo q
 | Inicio | `/` | Carrusel con tres mensajes (productos más económicos, frutas y verduras, despensa y panadería) y la sección "Los más económicos". Cada mensaje aparece solo si la API trae productos con stock para él. |
 | Catálogo | `/catalogo` | Grilla con todos los productos: categoría, nombre, presentación, precio en CLP y disponibilidad. |
 | Catálogo por categoría | `/catalogo?categoria=Despensa` | Mismo listado filtrado por categoría. Lo usan los botones del inicio. |
+| Filtros del catálogo | `/catalogo?q=leche&stock=1&min=500&max=3000&orden=precio-asc` | Buscador por nombre, categoría, presentación o código; rango de precio; solo con stock; orden por precio o nombre. Todo queda en la URL y se combina con la categoría. En pantallas angostas los filtros se abren con el botón "Filtros". |
+| Vista rápida | (sobre el catálogo) | Al hacer clic en un producto se abre un panel con su detalle y enlaces a la ficha y a su categoría. |
+| Ficha de producto | `/catalogo/producto/:id` | Imagen, precio, disponibilidad (avisa cuando quedan 5 unidades o menos), código, formato y otros productos de la misma categoría. |
 | Estado del sistema | `/estado` | Comprueba la conexión con la API y PostgreSQL. No aparece en el menú; se abre escribiendo la URL. |
 
 Inicio y catálogo tienen estados de carga, error y vacío. Cualquier ruta desconocida redirige al inicio.
 
 ### Pendiente
 
-- **Endpoint de productos.** El frontend ya llama a `GET /api/products`, pero la API todavía no lo implementa. Mientras tanto, inicio y catálogo muestran el mensaje de error.
+- **Producto por id.** La ficha busca el producto dentro de `GET /api/products`. Cuando exista `GET /api/products/{id}` conviene usarlo.
+- **Inicio de sesión.** Falta conectar el formulario de login a la API de sesión.
 - **Contrato de productos.** Falta el ejemplo JSON acordado en `docs/CONTRATOS_API.md`. El modelo de `src/app/core/api/product.model.ts` es provisional y se ajustará a ese contrato.
 - **Imágenes.** Si un producto no trae `imageUrl`, la tarjeta muestra "Sin imagen".
-- **Funciones del mockup sin implementar:** buscador, carrito, cuenta, detalle de producto, filtros por precio y disponibilidad, y ordenamiento.
+- **Funciones del mockup sin implementar:** carrito y cuenta.
 
 ## Contrato que usa hoy el frontend
 
@@ -66,7 +70,7 @@ Inicio y catálogo tienen estados de carga, error y vacío. Cualquier ruta desco
 | Campo | Tipo | Uso en pantalla |
 | --- | --- | --- |
 | `id` | número | Identificador interno. |
-| `sku` | texto | No se muestra todavía. |
+| `sku` | texto | Código en la vista rápida y la ficha; también se puede buscar. |
 | `name` | texto | Nombre del producto. |
 | `category` | texto | Etiqueta de la tarjeta y filtro por categoría. |
 | `presentation` | texto | Formato de venta, por ejemplo "Bolsa 1 kg". |
@@ -90,6 +94,6 @@ Mensajes según la respuesta:
 src/app/
   core/api/              Modelo, servicio HTTP y mensajes de error
   features/home/         Página de inicio y reglas de selección de productos
-  features/products/     Catálogo
+  features/products/     Catálogo, filtros, vista rápida y ficha de producto
   features/system-status/ Estado de API y base de datos
 ```

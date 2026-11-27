@@ -1,0 +1,111 @@
+<section class="detail" [attr.aria-busy]="state() === 'loading'">
+  <nav class="crumbs" aria-label="Ruta">
+    <a routerLink="/catalogo">Catálogo</a>
+    @if (product(); as item) {
+      <span aria-hidden="true">/</span>
+      <a routerLink="/catalogo" [queryParams]="{ categoria: item.category }">{{ item.category }}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{{ item.name }}</span>
+    }
+  </nav>
+
+  @switch (state()) {
+    @case ('loading') {
+      <div class="sheet" aria-hidden="true">
+        <div class="media"><span class="sk photo"></span></div>
+        <div class="body">
+          <span class="sk line short"></span>
+          <span class="sk line title"></span>
+          <span class="sk line"></span>
+          <span class="sk line price"></span>
+        </div>
+      </div>
+      <p class="sr-only" aria-live="polite">Cargando producto...</p>
+    }
+    @case ('error') {
+      <div class="message error" role="alert">
+        <h2>No pudimos cargar el producto</h2>
+        <p>{{ errorMessage() }}</p>
+        <button type="button" class="primary" (click)="load()">Reintentar</button>
+      </div>
+    }
+    @case ('not-found') {
+      <div class="message">
+        <h2>No encontramos este producto</h2>
+        <p>Puede que ya no esté disponible en el catálogo.</p>
+        <a class="secondary" routerLink="/catalogo">Ver todos los productos</a>
+      </div>
+    }
+    @case ('ready') {
+      @if (product(); as item) {
+        <article class="sheet content-in" [class.is-out]="item.stock <= 0" aria-labelledby="detail-title">
+          <div class="media">
+            <app-decor kind="blob-a" class="media-blob" />
+            @if (item.imageUrl) {
+              <img [src]="item.imageUrl" [alt]="item.name" />
+            } @else {
+              <span class="no-image">Sin imagen</span>
+            }
+          </div>
+          <div class="body">
+            <span class="pill" [style.--tone-bg]="toneBg(item)">{{ item.category }}</span>
+            <h1 id="detail-title">{{ item.name }}</h1>
+            <p class="presentation">{{ item.presentation }}</p>
+            <strong class="price">{{ formatPrice(item.price) }}</strong>
+
+            @if (item.stock <= 0) {
+              <span class="availability out">Sin stock</span>
+            } @else if (item.stock <= lowStock) {
+              <span class="availability low">Quedan {{ item.stock }} {{ item.stock === 1 ? 'unidad' : 'unidades' }}</span>
+            } @else {
+              <span class="availability">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>
+                Disponible
+              </span>
+            }
+
+            <dl class="facts">
+              <div><dt>Código</dt><dd>{{ item.sku }}</dd></div>
+              <div><dt>Formato</dt><dd>{{ item.presentation }}</dd></div>
+              <div><dt>Categoría</dt><dd>{{ item.category }}</dd></div>
+            </dl>
+
+            <a class="more" routerLink="/catalogo" [queryParams]="{ categoria: item.category }">
+              Ver más de {{ item.category }}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+            </a>
+          </div>
+        </article>
+
+        @if (related().length) {
+          <section class="related" aria-labelledby="related-title">
+            <div class="section-head">
+              <h2 id="related-title">También en {{ item.category }}</h2>
+            </div>
+            <ul class="grid" role="list">
+              @for (other of related(); track other.id) {
+                <li class="card" [class.is-out]="other.stock <= 0">
+                  <a [routerLink]="['/catalogo/producto', other.id]">
+                    <div class="card-media">
+                      @if (other.imageUrl) {
+                        <img [src]="other.imageUrl" [alt]="other.name" loading="lazy" />
+                      } @else {
+                        <span class="no-image small">Sin imagen</span>
+                      }
+                    </div>
+                    <div class="card-copy">
+                      <h3>{{ other.name }}</h3>
+                      <p class="presentation">{{ other.presentation }}</p>
+                      <strong class="card-price">{{ formatPrice(other.price) }}</strong>
+                      @if (other.stock <= 0) { <span class="availability out">Sin stock</span> }
+                    </div>
+                  </a>
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      }
+    }
+  }
+</section>
