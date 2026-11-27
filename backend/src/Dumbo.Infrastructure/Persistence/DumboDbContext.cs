@@ -8,6 +8,7 @@ public sealed class DumboDbContext(DbContextOptions<DumboDbContext> options) : D
     public DbSet<User> Users => Set<User>();
     public DbSet<ActivationToken> ActivationTokens => Set<ActivationToken>();
     public DbSet<EmailOutboxItem> EmailOutbox => Set<EmailOutboxItem>();
+    public DbSet<AccountAuditEntry> AccountAudit => Set<AccountAuditEntry>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
