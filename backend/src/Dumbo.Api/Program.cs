@@ -27,6 +27,7 @@ builder.Services.AddScoped<ListClientsUseCase>();
 builder.Services.AddScoped<GetClientUseCase>();
 builder.Services.AddScoped<UpdateClientUseCase>();
 builder.Services.AddScoped<ChangeClientStatusUseCase>();   
+builder.Services.AddScoped<ChangeAccountLifecycleUseCase>();
 
 builder.Services.AddHostedService<EmailOutboxWorker>();
 
