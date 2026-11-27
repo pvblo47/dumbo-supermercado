@@ -14,12 +14,12 @@ public sealed class ResendActivationLinkUseCase(
     /// <summary>
     /// Validates client eligibility and idempotently queues an account activation email.
     /// </summary>
-    public async Task<ResendActivationOutcome> ExecuteAsync(Guid clientId, CancellationToken cancellationToken)
+    public async Task<ResendActivationOutcome> ExecuteAsync(Guid clientId, CancellationToken cancellationToken, UserRole role = UserRole.Client)
     {
         var user = await lookup.FindByIdAsync(clientId, cancellationToken);
 
-        // Out of scope: non-existent, deleted, or non-client accounts.
-        if (user is null || user.Role != UserRole.Client || user.Status == UserStatus.Deleted)
+        // Out of scope: non-existent, deleted, or non-client accounts
+        if (user is null || user.Role != role || user.Status == UserStatus.Deleted)
             return ResendActivationOutcome.NotFound;
 
         // Activation links cannot reactivate disabled or already-active accounts (D06).

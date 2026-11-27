@@ -9,7 +9,7 @@ namespace Dumbo.Application.Clients;
 /// Full profile and email update command for a client account
 /// </summary>
 public sealed record UpdateClientCommand(
-    Guid Id, string? Email, string? FirstName, string? LastName, string? Phone);
+    Guid Id, string? Email, string? FirstName, string? LastName, string? Phone, UserRole Role = UserRole.Client);
 
 /// <summary>
 /// Updates a client's profile fields and email address (RF-007), rejecting emails already
@@ -28,7 +28,7 @@ public sealed class UpdateClientUseCase(
         if (data is null)
             return new UpdateClientResult(UpdateClientOutcome.Invalid, Errors: errors);
 
-        var client = await store.FindTrackedAsync(command.Id, cancellationToken);
+        var client = await store.FindTrackedAsync(command.Id, cancellationToken, command.Role);
         if (client is null)
             return new UpdateClientResult(UpdateClientOutcome.NotFound);
 

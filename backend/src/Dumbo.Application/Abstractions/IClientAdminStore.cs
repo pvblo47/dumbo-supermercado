@@ -10,7 +10,7 @@ namespace Dumbo.Application.Abstractions;
 /// <param name="Status">Exact account status filter; <see langword="null"/> includes all active/non-deleted accounts (never <see cref="UserStatus.Deleted"/>).</param>
 /// <param name="Page">1-based page index.</param>
 /// <param name="PageSize">Number of items per page.</param>
-public sealed record ClientQuery(string? Search, UserStatus? Status, int Page, int PageSize);
+public sealed record ClientQuery(string? Search, UserStatus? Status, int Page, int PageSize, UserRole Role = UserRole.Client, bool Deleted = false);
 
 /// <summary>
 /// Represents a paged slice of client records along with the total matching count across all pages.
@@ -29,7 +29,13 @@ public interface IClientAdminStore
     /// Retrieves a tracked non-deleted client for modification prior to <see cref="TrySaveAsync"/>,
     /// or <see langword="null"/> if not found, deleted, or not a client.
     /// </summary>
-    Task<User?> FindTrackedAsync(Guid id, CancellationToken cancellationToken);
+    Task<User?> FindTrackedAsync(Guid id, CancellationToken cancellationToken, UserRole role = UserRole.Client, bool includeDeleted = false);
+
+    /// <summary>
+    /// Stages an audit entry in the current unit of work without saving immediately;
+    /// it is persisted atomically with the status change in <see cref="TrySaveAsync"/>
+    /// </summary>
+    void AddAudit(AccountAuditEntry entry);
 
     /// <summary>
     /// Persists changes to tracked clients, returning <see langword="false"/> on a unique email conflict (<c>uq_users_email</c>).

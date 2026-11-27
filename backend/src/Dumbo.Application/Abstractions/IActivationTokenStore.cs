@@ -29,4 +29,10 @@ public interface IActivationTokenStore
     /// </returns>
     Task<bool> RedeemAsync(Guid tokenId, Guid userId, string passwordHash, UserStatus newStatus,
         DateTime now, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Immediately expires all active activation and recovery tokens for the specified account,
+    /// typically invoked when soft-deleting an account
+    /// </summary>
+    Task ExpireAllAsync(Guid userId, DateTime now, CancellationToken cancellationToken);
 }

@@ -8,7 +8,7 @@ namespace Dumbo.Application.Clients;
 /// <summary>
 /// Input payload entered by staff to provision a client account without assigning a password or role
 /// </summary>
-public sealed record CreateClientByStaffCommand(string? Email, string? FirstName, string? LastName, string? Phone);
+public sealed record CreateClientByStaffCommand(string? Email, string? FirstName, string? LastName, string? Phone, UserRole Role = UserRole.Client);
 
 /// <summary>
 /// Creates a <see cref="UserStatus.PendingActivation"/> client account on behalf of staff without a password,
@@ -43,7 +43,7 @@ public sealed class CreateClientByStaffUseCase(
             LastName = data.LastName,
             Phone = data.Phone,
             PasswordHash = null,
-            Role = UserRole.Client,
+            Role = command.Role,
             Status = UserStatus.PendingActivation,
             CreatedAt = now
         };

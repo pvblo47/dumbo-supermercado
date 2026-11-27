@@ -7,7 +7,7 @@ namespace Dumbo.Application.Clients;
 /// <summary>
 /// Raw query parameters accepted by the client listing endpoint; all fields are optional
 /// </summary>
-public sealed record ListClientsCommand(string? Search, string? Status, int? Page, int? PageSize);
+public sealed record ListClientsCommand(string? Search, string? Status, int? Page, int? PageSize, UserRole Role = UserRole.Client, bool Deleted = false);
 
 /// <summary>
 /// Lists active/non-deleted client accounts for staff administration,
@@ -57,7 +57,7 @@ public sealed class ListClientsUseCase(IClientAdminStore store)
         else if (search.Length > MaxSearchLength)
             search = search[..MaxSearchLength];
 
-        var result = await store.ListAsync(new ClientQuery(search, status, page, pageSize), cancellationToken);
+        var result = await store.ListAsync(new ClientQuery(search, status, page, pageSize, command.Role, command.Deleted), cancellationToken);
 
         return new ListClientsResult(new ClientPage(
             result.Items.Select(u => u.ToSummary()).ToList(), result.Total, page, pageSize));

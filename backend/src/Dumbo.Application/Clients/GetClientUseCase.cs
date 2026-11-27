@@ -15,9 +15,9 @@ public sealed class GetClientUseCase(IAccountLookup lookup)
     /// <returns>
     /// The account summary, or <see langword="null"/> if not found, deleted, or not a client
     /// </returns>
-    public async Task<AccountSummary?> ExecuteAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<AccountSummary?> ExecuteAsync(Guid id, CancellationToken cancellationToken, UserRole role = UserRole.Client)
     {
         var user = await lookup.FindByIdAsync(id, cancellationToken);
-        return user is { Role: UserRole.Client } && user.Status != UserStatus.Deleted ? user.ToSummary() : null;
+        return user is not null && user.Role == role && user.Status != UserStatus.Deleted ? user.ToSummary() : null;
     }
 }
