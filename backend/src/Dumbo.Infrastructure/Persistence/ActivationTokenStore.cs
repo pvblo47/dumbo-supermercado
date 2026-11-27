@@ -43,28 +43,31 @@ internal sealed class ActivationTokenStore(DumboDbContext db) : IActivationToken
 
     /// <inheritdoc />
     public async Task<bool> RedeemAsync(
-        Guid tokenId, Guid userId, string passwordHash, UserStatus newStatus, DateTime now,
+        Guid tokenId, Guid userId, string passwordHash, UserStatus expectedStatus, Guid expectedSessionVersion, DateTime now,
         CancellationToken cancellationToken)
     {
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
 
-        // Single-use enforcement: filter on unused and unexpired directly in the UPDATE statement.
-        // Under concurrent requests, only one wins the row update while the other sees 0 affected rows.
+        // Lock the user before its tokens, in the same order as account lifecycle updates.
+        var nextSessionVersion = Guid.NewGuid();
+        var updated = await db.Users
+            .Where(u => u.Id == userId && u.Status == expectedStatus && u.SessionVersion == expectedSessionVersion)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(u => u.PasswordHash, passwordHash)
+                      .SetProperty(u => u.Status, UserStatus.Active)
+                      .SetProperty(u => u.SessionVersion, nextSessionVersion)
+                      .SetProperty(u => u.UpdatedAt, now), cancellationToken);
+
+        if (updated == 0)
+            return false;
+
         var consumed = await db.ActivationTokens
-            .Where(t => t.Id == tokenId && !t.IsUsed && t.ExpiresAt > now)
+            .Where(t => t.Id == tokenId && t.UserId == userId && !t.IsUsed && t.ExpiresAt > now)
             .ExecuteUpdateAsync(
                 s => s.SetProperty(t => t.IsUsed, true).SetProperty(t => t.UsedAt, now), cancellationToken);
 
         if (consumed == 0)
             return false;   // Exiting without Commit automatically rolls back the transaction.
-
-        await db.Users
-            .Where(u => u.Id == userId)
-            .ExecuteUpdateAsync(
-                s => s.SetProperty(u => u.PasswordHash, passwordHash)
-                      .SetProperty(u => u.Status, newStatus)
-                      .SetProperty(u => u.UpdatedAt, now),
-                cancellationToken);
 
         // Expire any remaining unused tokens belonging to the same account.
         await db.ActivationTokens

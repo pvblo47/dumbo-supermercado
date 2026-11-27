@@ -19,8 +19,8 @@ public sealed class ClientManagementTests
 
         public Fixture()
         {
-            Clients = new InMemoryClientAdminStore(Users);
-            Accounts = new LookupBackedAccountStore(Users);
+            Clients = new InMemoryClientAdminStore(Users, Outbox, new InMemoryTokenStore(Users));
+            Accounts = new LookupBackedAccountStore(Users, Outbox);
         }
 
         public User Add(UserStatus status, string email = "ana@mail.com", string? passwordHash = "hash:x")

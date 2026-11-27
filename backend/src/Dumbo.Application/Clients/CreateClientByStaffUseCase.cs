@@ -18,8 +18,7 @@ public sealed record CreateClientByStaffCommand(string? Email, string? FirstName
 /// Enqueues the activation email into the outbox rather than sending synchronously, and reuses
 /// <see cref="RegisterClientResult"/> to match self-registration outcomes.
 /// </remarks>
-public sealed class CreateClientByStaffUseCase(
-    IAccountStore store, IEmailOutboxStore outbox, TimeProvider clock)
+public sealed class CreateClientByStaffUseCase(IAccountStore store, TimeProvider clock)
 {
     /// <summary>
     /// Validates client data, creates a pending client account, and enqueues an activation email.
@@ -48,14 +47,9 @@ public sealed class CreateClientByStaffUseCase(
             CreatedAt = now
         };
 
-        // Rely on the unique email index when concurrent creation requests race.
-        if (!await store.TryAddAsync(user, cancellationToken))
+        var pendingEmail = EmailOutboxItem.Create(user.Id, user.Email, ActivationTokenType.AccountActivation, now);
+        if (!await store.TryAddAsync(user, cancellationToken, pendingEmail))
             return EmailTaken();
-
-        // Keep the created account even if enqueueing fails so staff can resend the link later.
-        await outbox.EnqueueAsync(
-            EmailOutboxItem.Create(user.Id, user.Email, ActivationTokenType.AccountActivation, now),
-            cancellationToken);
 
         return new RegisterClientResult(RegisterClientOutcome.Created, user.ToSummary());
     }

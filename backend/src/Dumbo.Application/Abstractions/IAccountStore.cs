@@ -17,5 +17,6 @@ public interface IAccountStore
     /// Attempts to add a new user. Returns false if another account has reserved the email 
     /// (enforced by database unique constraints and lifecycle preservation rules D07.6).
     /// </summary>
-    Task<bool> TryAddAsync(User user, CancellationToken cancellationToken);
+    /// <remarks>When supplied, the pending email and account are inserted in the same transaction.</remarks>
+    Task<bool> TryAddAsync(User user, CancellationToken cancellationToken, EmailOutboxItem? pendingEmail = null);
 }

@@ -32,7 +32,7 @@ internal sealed class FakeAccountStore : IAccountStore
     public Task<bool> EmailExistsAsync(string normalizedEmail, CancellationToken cancellationToken) =>
         Task.FromResult(ExistingEmails.Contains(normalizedEmail));
 
-    public Task<bool> TryAddAsync(User user, CancellationToken cancellationToken)
+    public Task<bool> TryAddAsync(User user, CancellationToken cancellationToken, EmailOutboxItem? pendingEmail = null)
     {
         if (LoseRaceOnAdd)
             return Task.FromResult(false);

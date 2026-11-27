@@ -25,9 +25,10 @@ public interface IActivationTokenStore
     /// and expires any remaining unused tokens for the account.
     /// </summary>
     /// <returns>
-    /// <see langword="false"/> if the token was already used or expired between validation and redemption.
+    /// <see langword="false"/> if the token stopped being valid or the account changed state or session version.
     /// </returns>
-    Task<bool> RedeemAsync(Guid tokenId, Guid userId, string passwordHash, UserStatus newStatus,
+    Task<bool> RedeemAsync(Guid tokenId, Guid userId, string passwordHash, UserStatus expectedStatus,
+        Guid expectedSessionVersion,
         DateTime now, CancellationToken cancellationToken);
 
     /// <summary>

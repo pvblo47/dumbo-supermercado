@@ -15,7 +15,7 @@ public sealed record ListClientsResult(
 /// <summary>
 /// Outcome states for updating a client's profile details
 /// </summary>
-public enum UpdateClientOutcome { Updated, Invalid, NotFound, EmailTaken }
+public enum UpdateClientOutcome { Updated, Invalid, NotFound, EmailTaken, ChangedConcurrently }
 
 /// <summary>
 /// Result of attempting to update a client account
@@ -38,7 +38,7 @@ public enum ClientStatusAction { Disable, Enable }
 /// <summary>
 /// Outcome of changing a client's status; <see cref="Changed"/> also covers already being in the target state
 /// </summary>
-public enum ChangeClientStatusOutcome { Changed, NotFound }
+public enum ChangeClientStatusOutcome { Changed, NotFound, ChangedConcurrently }
 
 /// <summary>
 /// Result of changing a client's administrative status

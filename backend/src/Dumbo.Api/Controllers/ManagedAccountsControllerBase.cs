@@ -103,6 +103,7 @@ public abstract class ManagedAccountsControllerBase : ControllerBase
         {
             UpdateClientOutcome.Updated => Ok(result.Account),
             UpdateClientOutcome.NotFound => NotFoundResponse(),
+            UpdateClientOutcome.ChangedConcurrently => AccountChangedResponse(),
             UpdateClientOutcome.EmailTaken =>
                 Failure(StatusCodes.Status409Conflict, RegisterClientUseCase.EmailTakenMessage,
                     "EMAIL_ALREADY_REGISTERED", result.Errors),
@@ -164,7 +165,12 @@ public abstract class ManagedAccountsControllerBase : ControllerBase
         Guid id, ClientStatusAction action, ChangeClientStatusUseCase useCase, CancellationToken cancellationToken)
     {
         var result = await useCase.ExecuteAsync(id, action, cancellationToken, ManagedRole);
-        return result.Outcome == ChangeClientStatusOutcome.Changed ? Ok(result.Account) : NotFoundResponse();
+        return result.Outcome switch
+        {
+            ChangeClientStatusOutcome.Changed => Ok(result.Account),
+            ChangeClientStatusOutcome.ChangedConcurrently => AccountChangedResponse(),
+            _ => NotFoundResponse()
+        };
     }
 
     private async Task<IActionResult> LifecycleAsync(
@@ -179,6 +185,7 @@ public abstract class ManagedAccountsControllerBase : ControllerBase
         return result.Outcome switch
         {
             AccountLifecycleOutcome.Changed => Ok(result.Account),
+            AccountLifecycleOutcome.ChangedConcurrently => AccountChangedResponse(),
             AccountLifecycleOutcome.NotDeleted =>
                 Failure(StatusCodes.Status409Conflict, "La cuenta no está eliminada", "ACCOUNT_NOT_DELETED"),
             _ => NotFoundResponse()
@@ -186,6 +193,9 @@ public abstract class ManagedAccountsControllerBase : ControllerBase
     }
 
     private ObjectResult NotFoundResponse() => Failure(StatusCodes.Status404NotFound, NotFoundTitle, NotFoundCode);
+
+    private static ObjectResult AccountChangedResponse() =>
+        Failure(StatusCodes.Status409Conflict, "La cuenta cambió. Actualiza los datos y vuelve a intentar.", "ACCOUNT_CHANGED");
 
     // Standardized problem payload with human-readable title, machine-readable code for clients, and optional field errors.
     private static ObjectResult Failure(

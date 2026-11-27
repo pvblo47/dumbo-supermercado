@@ -30,13 +30,12 @@ internal sealed class JwtAccessTokenIssuer(JwtSettings settings, TimeProvider cl
             NotBefore = now,
             Expires = expires,
 
-            // Short, standard claim names: "sub" (account id), "email", "role", and "jti" (unique token id).
-            // The API reads them using these exact names (see JwtAuthenticationExtensions).
             Claims = new Dictionary<string, object>
             {
                 ["sub"] = user.Id.ToString(),
                 ["email"] = user.Email,
                 ["role"] = user.Role.ToString(),
+                [JwtSettings.SessionVersionClaim] = user.SessionVersion.ToString(),
                 ["jti"] = Guid.NewGuid().ToString()
             },
 

@@ -11,7 +11,7 @@ public enum AccountLifecycleAction { Delete, Restore }
 /// Represents the outcome of a lifecycle transition. <see cref="Changed"/> includes idempotent
 /// no-op deletions; <see cref="NotDeleted"/> indicates restoration was requested for a non-deleted account.
 /// </summary>
-public enum AccountLifecycleOutcome { Changed, NotFound, NotDeleted }
+public enum AccountLifecycleOutcome { Changed, NotFound, NotDeleted, ChangedConcurrently }
 
 public sealed record AccountLifecycleResult(AccountLifecycleOutcome Outcome, AccountSummary? Account = null);
 
@@ -22,8 +22,7 @@ public sealed record AccountLifecycleResult(AccountLifecycleOutcome Outcome, Acc
 /// the email address. Restoring returns the same account as <see cref="UserStatus.Disabled"/> rather
 /// than re-enabling it automatically, recording an atomic <see cref="AccountAuditEntry"/>.
 /// </summary>
-public sealed class ChangeAccountLifecycleUseCase(
-    IClientAdminStore store, IActivationTokenStore tokens, TimeProvider clock)
+public sealed class ChangeAccountLifecycleUseCase(IClientAdminStore store, TimeProvider clock)
 {
     public async Task<AccountLifecycleResult> ExecuteAsync(
         Guid targetId, Guid actorId, AccountLifecycleAction action, UserRole role,
@@ -57,7 +56,8 @@ public sealed class ChangeAccountLifecycleUseCase(
         }
 
         account.UpdatedAt = now;
-        store.AddAudit(new AccountAuditEntry
+        account.SessionVersion = Guid.NewGuid();
+        var audit = new AccountAuditEntry
         {
             TargetUserId = account.Id,
             ActorUserId = actorId,
@@ -65,12 +65,10 @@ public sealed class ChangeAccountLifecycleUseCase(
             PreviousStatus = previous,
             NewStatus = account.Status,
             OccurredAt = now
-        });
-        await store.TrySaveAsync(cancellationToken); // Persist status mutation and audit entry atomically
-
-        // Expire active tokens on soft delete (D07.3); queued emails self-cancel in the worker when ineligible.
-        if (action == AccountLifecycleAction.Delete)
-            await tokens.ExpireAllAsync(account.Id, now, cancellationToken);
+        };
+        var saved = await store.SaveAsync(cancellationToken, audit: audit, invalidateLinksFor: account);
+        if (saved != AccountSaveOutcome.Saved)
+            return new AccountLifecycleResult(AccountLifecycleOutcome.ChangedConcurrently);
 
         return new AccountLifecycleResult(AccountLifecycleOutcome.Changed, account.ToSummary());
     }

@@ -295,6 +295,11 @@ namespace Dumbo.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("role");
 
+                    b.Property<Guid>("SessionVersion")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid")
+                        .HasColumnName("session_version");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer")
                         .HasColumnName("status");

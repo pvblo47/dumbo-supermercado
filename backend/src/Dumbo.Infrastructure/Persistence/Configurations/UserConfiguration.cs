@@ -31,6 +31,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.Role).HasConversion<int>().IsRequired();
         builder.Property(x => x.Status).HasConversion<int>().IsRequired();
+        builder.Property(x => x.SessionVersion).IsConcurrencyToken();
 
         // Same index name as the shared SQL schema; used by AccountStore to detect duplicate emails
         builder.HasIndex(x => x.Email).IsUnique().HasDatabaseName("uq_users_email");

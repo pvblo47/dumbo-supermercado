@@ -17,9 +17,11 @@ internal sealed class AccountStore(DumboDbContext db) : IAccountStore
     /// Attempts to persist a new user account, handling unique email constraint violations
     /// caused by concurrent registrations and detaching the failed entity from the change tracker.
     /// </summary>
-    public async Task<bool> TryAddAsync(User user, CancellationToken cancellationToken)
+    public async Task<bool> TryAddAsync(User user, CancellationToken cancellationToken, EmailOutboxItem? pendingEmail = null)
     {
         db.Users.Add(user);
+        if (pendingEmail is not null)
+            db.EmailOutbox.Add(pendingEmail);
         try
         {
             await db.SaveChangesAsync(cancellationToken);
@@ -32,6 +34,8 @@ internal sealed class AccountStore(DumboDbContext db) : IAccountStore
         })
         {
             db.Entry(user).State = EntityState.Detached;
+            if (pendingEmail is not null)
+                db.Entry(pendingEmail).State = EntityState.Detached;
             return false;
         }
     }

@@ -34,9 +34,9 @@ public sealed class ClientsEndpointTests
 
         public Env()
         {
-            var accounts = new LookupBackedAccountStore(Users);
-            Clients = new InMemoryClientAdminStore(Users);
             var tokens = new InMemoryTokenStore(Users);
+            var accounts = new LookupBackedAccountStore(Users, Outbox);
+            Clients = new InMemoryClientAdminStore(Users, Outbox, tokens);
 
             Factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
             {
@@ -323,7 +323,7 @@ public sealed class ClientsEndpointTests
     // Disable: immediate access revocation
 
     [Fact]
-    public async Task Disabling_a_client_revokes_the_access_of_its_open_session_and_enabling_restores_it()
+    public async Task Reenabling_a_client_requires_a_new_session()
     {
         using var env = new Env();
         env.AddUser("trabajador@dumbo.cl", UserRole.Worker, UserStatus.Active);
@@ -353,6 +353,8 @@ public sealed class ClientsEndpointTests
         using var enable = await staff.PostAsync($"/api/clients/{ana.Id}/enable", null);
         Assert.Equal(HttpStatusCode.OK, enable.StatusCode);
         Assert.Equal("Active", (await JsonAsync(enable)).GetProperty("status").GetString());
+        using var oldSession = await session.GetAsync("/api/auth/me");
+        Assert.Equal(HttpStatusCode.Unauthorized, oldSession.StatusCode);
         using var relogin = await anonymous.PostAsJsonAsync("/api/auth/login", new { email = "ana@dumbo.cl", password = Password });
         Assert.Equal(HttpStatusCode.OK, relogin.StatusCode);
 

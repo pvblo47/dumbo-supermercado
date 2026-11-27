@@ -9,4 +9,7 @@ namespace Dumbo.Application.Security;
 /// <param name="Audience">Intended recipient of the token (the Angular application).</param>
 /// <param name="SigningKey">Secret signing key. Never logged or committed to Git.</param>
 /// <param name="ExpiresMinutes">Token lifetime in minutes from issuance.</param>
-public sealed record JwtSettings(string Issuer, string Audience, string SigningKey, int ExpiresMinutes);
+public sealed record JwtSettings(string Issuer, string Audience, string SigningKey, int ExpiresMinutes)
+{
+    public const string SessionVersionClaim = "sv";
+}

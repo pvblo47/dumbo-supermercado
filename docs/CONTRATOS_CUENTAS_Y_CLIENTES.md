@@ -99,6 +99,8 @@ Mensajes literales del ERS que el front puede mostrar tal cual (vienen en `title
 
 Regla de contraseña: **9 a 128 caracteres, con al menos una mayúscula, una minúscula y un número.**
 
+Cambiar la contraseña mediante un enlace invalida las sesiones anteriores. Al desplegar la migración `AgregarVersionSesion`, las sesiones emitidas por la versión anterior requerirán un nuevo inicio de sesión. Aplicar la migración antes de actualizar la API.
+
 ### Rutas de Angular que debe tener el front
 
 Los correos llevan enlaces a estas rutas del **frontend** (no son de la API). Cada una lee `token` de la URL, pide la contraseña nueva y llama al endpoint indicado.
@@ -145,7 +147,7 @@ Respuesta **201** (cabecera `Location` apunta a `GET /api/clients/{id}`):
 - El correo se normaliza (sin espacios exteriores y en minúsculas) y debe ser único entre **todas** las cuentas, también las deshabilitadas y eliminadas. Duplicado: **409** con `code: "EMAIL_ALREADY_REGISTERED"` y `errors.email`.
 - `firstName`, `lastName` y `phone` son obligatorios y no admiten solo espacios. Máximos: nombres y apellidos 100 caracteres, teléfono 50.
 - El cliente queda **sin contraseña**: no puede iniciar sesión hasta activar. La contraseña no se genera ni se envía por correo.
-- El correo de activación sale en segundo plano, normalmente dentro de ~15 segundos. Esta ruta responde sin esperar el envío.
+- La cuenta y el correo pendiente se guardan juntos. El envío ocurre en segundo plano, normalmente dentro de ~15 segundos, y esta ruta responde sin esperar al proveedor de correo.
 
 ### Listado — `GET /api/clients`
 
@@ -198,6 +200,7 @@ Se envían **los cuatro campos completos** (no es una edición parcial).
 
 - `disable`: la cuenta pasa a `Disabled`. Sus sesiones abiertas dejan de servir en la siguiente petición (**401**) y un nuevo login da **403** "Usuario deshabilitado".
 - `enable`: una cuenta `Disabled` vuelve a `Active` si ya tenía contraseña. Si nunca llegó a activarse, queda en `PendingActivation` y el sistema **reenvía el enlace de activación** (D07.6): no queda habilitada por ese acto.
+- Al habilitar una cuenta, el usuario debe iniciar una nueva sesión. Los tokens anteriores siguen revocados.
 - Ambas son **idempotentes**: repetirlas devuelve **200** con el estado actual, sin error.
 - Responden con la cuenta actualizada.
 
@@ -207,6 +210,7 @@ Se envían **los cuatro campos completos** (no es una edición parcial).
 |---|---|---|---|
 | Datos inválidos | 400 | `VALIDATION_ERROR` | Hay datos que corregir |
 | Correo ya registrado | 409 | `EMAIL_ALREADY_REGISTERED` | El correo ya está registrado |
+| La cuenta cambió mientras se editaba o se actualizaba su estado | 409 | `ACCOUNT_CHANGED` | La cuenta cambió. Actualiza los datos y vuelve a intentar. |
 | Cliente inexistente, eliminado, o cuenta que no es de cliente | 404 | `CLIENT_NOT_FOUND` | Cliente no encontrado |
 | Reenvío a una cuenta que no está pendiente | 409 | `ACCOUNT_NOT_PENDING` | La cuenta no está pendiente de activación |
 

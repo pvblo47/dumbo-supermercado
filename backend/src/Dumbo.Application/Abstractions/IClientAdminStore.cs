@@ -17,6 +17,8 @@ public sealed record ClientQuery(string? Search, UserStatus? Status, int Page, i
 /// </summary>
 public sealed record ClientQueryResult(IReadOnlyList<User> Items, int Total);
 
+public enum AccountSaveOutcome { Saved, EmailTaken, ChangedConcurrently }
+
 /// <summary>
 /// Persistence abstraction for staff client administration (RF-007), scoped strictly to non-deleted <see cref="UserRole.Client"/> accounts.
 /// </summary>
@@ -26,19 +28,14 @@ public interface IClientAdminStore
     Task<ClientQueryResult> ListAsync(ClientQuery query, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Retrieves a tracked non-deleted client for modification prior to <see cref="TrySaveAsync"/>,
+    /// Retrieves a tracked account for modification prior to <see cref="SaveAsync"/>,
     /// or <see langword="null"/> if not found, deleted, or not a client.
     /// </summary>
     Task<User?> FindTrackedAsync(Guid id, CancellationToken cancellationToken, UserRole role = UserRole.Client, bool includeDeleted = false);
 
     /// <summary>
-    /// Stages an audit entry in the current unit of work without saving immediately;
-    /// it is persisted atomically with the status change in <see cref="TrySaveAsync"/>
+    /// Saves the account together with its audit, queued email or invalidation of links when requested.
     /// </summary>
-    void AddAudit(AccountAuditEntry entry);
-
-    /// <summary>
-    /// Persists changes to tracked clients, returning <see langword="false"/> on a unique email conflict (<c>uq_users_email</c>).
-    /// </summary>
-    Task<bool> TrySaveAsync(CancellationToken cancellationToken);
+    Task<AccountSaveOutcome> SaveAsync(CancellationToken cancellationToken, EmailOutboxItem? pendingEmail = null,
+        AccountAuditEntry? audit = null, User? invalidateLinksFor = null);
 }
