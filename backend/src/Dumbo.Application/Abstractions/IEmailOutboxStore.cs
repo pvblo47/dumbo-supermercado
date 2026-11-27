@@ -28,4 +28,16 @@ public interface IEmailOutboxStore
     /// Persists state updates made to items retrieved via <see cref="GetDueAsync"/>.
     /// </summary>
     Task SaveChangesAsync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Lists exhausted outbox emails (<c>Failed</c> status) ordered from most recent to oldest.
+    /// Executed without change tracking as a read-only query for administrators.
+    /// </summary>
+    Task<IReadOnlyList<EmailOutboxItem>> ListFailedAsync(int max, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Finds an outbox item by ID with change tracking enabled so it can be mutated and persisted
+    /// via <see cref="SaveChangesAsync"/>. Returns <c>null</c> if not found.
+    /// </summary>
+    Task<EmailOutboxItem?> FindAsync(Guid id, CancellationToken cancellationToken);
 }

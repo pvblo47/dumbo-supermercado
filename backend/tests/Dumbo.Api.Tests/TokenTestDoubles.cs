@@ -19,6 +19,8 @@ internal sealed class MutableClock(DateTimeOffset start) : TimeProvider
 /// <summary>Almacén de enlaces en memoria con las mismas reglas que el real (vencer, un solo uso).</summary>
 internal sealed class InMemoryTokenStore(FakeAccountLookup users) : IActivationTokenStore
 {
+    public List<ActivationToken> Tokens { get; } = [];
+
     public Task ExpireAllAsync(Guid userId, DateTime now, CancellationToken cancellationToken)
     {
         foreach (var t in Tokens.Where(t => t.UserId == userId && !t.IsUsed && t.ExpiresAt > now))
@@ -26,8 +28,6 @@ internal sealed class InMemoryTokenStore(FakeAccountLookup users) : IActivationT
         return Task.CompletedTask;
     }
     
-    public List<ActivationToken> Tokens { get; } = [];
-
     public Task<ActivationToken?> FindByHashAsync(string tokenHash, CancellationToken cancellationToken)
     {
         var token = Tokens.FirstOrDefault(t => t.Token == tokenHash);
@@ -95,6 +95,18 @@ internal sealed class InMemoryOutbox : IEmailOutboxStore
     }
 
     public Task SaveChangesAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    
+    public Task<IReadOnlyList<EmailOutboxItem>> ListFailedAsync(int max, CancellationToken cancellationToken)
+    {
+        IReadOnlyList<EmailOutboxItem> failed = Items
+            .Where(i => i.Status == EmailOutboxStatus.Failed)
+            .OrderByDescending(i => i.CreatedAt)
+            .Take(max)
+            .ToList();
+        return Task.FromResult(failed);
+    }
+    public Task<EmailOutboxItem?> FindAsync(Guid id, CancellationToken cancellationToken) => Task.FromResult(Items.FirstOrDefault(i => i.Id == id));
 }
 
 /// <summary>

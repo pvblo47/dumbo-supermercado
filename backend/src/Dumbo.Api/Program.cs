@@ -3,6 +3,7 @@ using Dumbo.Api.Workers;
 using Dumbo.Application.Accounts;
 using Dumbo.Infrastructure;
 using Dumbo.Application.Clients;
+using Dumbo.Application.EmailOutbox;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ builder.Services.AddScoped<GetClientUseCase>();
 builder.Services.AddScoped<UpdateClientUseCase>();
 builder.Services.AddScoped<ChangeClientStatusUseCase>();   
 builder.Services.AddScoped<ChangeAccountLifecycleUseCase>();
+builder.Services.AddScoped<ListFailedEmailsUseCase>();
+builder.Services.AddScoped<RetryFailedEmailUseCase>();
 
 builder.Services.AddHostedService<EmailOutboxWorker>();
 
