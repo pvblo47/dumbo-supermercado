@@ -29,25 +29,34 @@ internal sealed class LookupBackedAccountStore(FakeAccountLookup users) : IAccou
 internal sealed class InMemoryClientAdminStore(FakeAccountLookup users) : IClientAdminStore
 {
     /// <summary>
-    /// Simulates a concurrent unique-email conflict when saving changes
+    /// Simulates a concurrent unique-email conflict when saving changes.
     /// </summary>
     public bool LoseRaceOnSave { get; set; }
 
+    /// <summary>
+    /// Captured audit entries recorded during lifecycle actions (D07.7) for test assertions.
+    /// </summary>
+    public List<AccountAuditEntry> Audit { get; } = [];
+
+    public void AddAudit(AccountAuditEntry entry) => Audit.Add(entry);
+
     public Task<ClientQueryResult> ListAsync(ClientQuery query, CancellationToken cancellationToken)
     {
-        var clients = users.Users.Where(u => u.Role == UserRole.Client && u.Status != UserStatus.Deleted);
+        var accounts = users.Users.Where(u => u.Role == query.Role &&
+            (query.Deleted ? u.Status == UserStatus.Deleted : u.Status != UserStatus.Deleted));
 
-        if (query.Status is { } status)
-            clients = clients.Where(u => u.Status == status);
+        if (!query.Deleted && query.Status is { } status)
+            accounts = accounts.Where(u => u.Status == status);
 
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
             var text = query.Search;
-            clients = clients.Where(u =>
+            accounts = accounts.Where(u =>
                 Has(u.Email, text) || Has(u.FirstName, text) || Has(u.LastName, text) || Has(u.Phone, text));
         }
 
-        var all = clients
+        // Deterministic ordering matching database collation so pagination assertions remain stable.
+        var all = accounts
             .OrderBy(u => u.LastName, StringComparer.Ordinal)
             .ThenBy(u => u.FirstName, StringComparer.Ordinal)
             .ThenBy(u => u.Id)
@@ -57,9 +66,10 @@ internal sealed class InMemoryClientAdminStore(FakeAccountLookup users) : IClien
         return Task.FromResult(new ClientQueryResult(items, all.Count));
     }
 
-    public Task<User?> FindTrackedAsync(Guid id, CancellationToken cancellationToken) =>
+    public Task<User?> FindTrackedAsync(
+        Guid id, CancellationToken cancellationToken, UserRole role, bool includeDeleted) =>
         Task.FromResult(users.Users.FirstOrDefault(
-            u => u.Id == id && u.Role == UserRole.Client && u.Status != UserStatus.Deleted));
+            u => u.Id == id && u.Role == role && (includeDeleted || u.Status != UserStatus.Deleted)));
 
     public Task<bool> TrySaveAsync(CancellationToken cancellationToken) => Task.FromResult(!LoseRaceOnSave);
 

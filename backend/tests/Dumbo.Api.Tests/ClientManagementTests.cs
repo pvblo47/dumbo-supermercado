@@ -78,7 +78,7 @@ public sealed class ClientManagementTests
         var f = new Fixture();
         var withPassword = f.Add(UserStatus.Disabled, "con@mail.com", "hash:x");
         var withoutPassword = f.Add(UserStatus.Disabled, "sin@mail.com", null);
-        var useCase = new ChangeClientStatusUseCase(f.Clients, f.Clock);
+        var useCase = new ChangeClientStatusUseCase(f.Clients, f.Outbox, f.Clock);
 
         await useCase.ExecuteAsync(withPassword.Id, ClientStatusAction.Enable, CancellationToken.None);
         await useCase.ExecuteAsync(withoutPassword.Id, ClientStatusAction.Enable, CancellationToken.None);
@@ -104,5 +104,25 @@ public sealed class ClientManagementTests
             Assert.NotNull(result.Errors);
             Assert.True(result.Errors!.ContainsKey("status"));
         }
+    }
+
+    /// <summary>
+    /// Verifies that enabling a disabled account with no password hash transitions it to
+    /// <see cref="UserStatus.PendingActivation"/> rather than active, and queues a single
+    /// <see cref="ActivationTokenType.AccountActivation"/> email (D07.6).
+    /// </summary>
+    [Fact]
+    public async Task Habilitating_an_account_that_never_activated_stays_pending_and_resends_the_activation()
+    {
+        var f = new Fixture();
+        var user = f.Add(UserStatus.Disabled, "sin@mail.com", passwordHash: null);
+        var useCase = new ChangeClientStatusUseCase(f.Clients, f.Outbox, f.Clock);
+
+        var result = await useCase.ExecuteAsync(user.Id, ClientStatusAction.Enable, CancellationToken.None);
+
+        Assert.Equal(UserStatus.PendingActivation, user.Status);   // Does not become active directly
+        Assert.Equal(nameof(UserStatus.PendingActivation), result.Account!.Status);
+        var queued = Assert.Single(f.Outbox.Items);
+        Assert.Equal(ActivationTokenType.AccountActivation, queued.Kind);
     }
 }

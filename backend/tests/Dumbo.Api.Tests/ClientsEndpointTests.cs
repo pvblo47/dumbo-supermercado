@@ -23,17 +23,19 @@ public sealed class ClientsEndpointTests
     private const string Password = "Clave1234";
 
     // Test host wiring in-memory stores with a real API pipeline and JWT bearer auth
-    private sealed class Env : IDisposable
+    internal sealed class Env : IDisposable
     {
         public FakeAccountLookup Users { get; } = new();
         public InMemoryOutbox Outbox { get; } = new();
         public CapturingEmailSender Sender { get; } = new();
+        public InMemoryClientAdminStore Clients { get; }
         public WebApplicationFactory<Program> Factory { get; }
+        
 
         public Env()
         {
             var accounts = new LookupBackedAccountStore(Users);
-            var clients = new InMemoryClientAdminStore(Users);
+            Clients = new InMemoryClientAdminStore(Users);
             var tokens = new InMemoryTokenStore(Users);
 
             Factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
@@ -51,7 +53,7 @@ public sealed class ClientsEndpointTests
                     s.RemoveAll<IEmailSender>();
                     s.AddSingleton<IAccountLookup>(Users);
                     s.AddSingleton<IAccountStore>(accounts);
-                    s.AddSingleton<IClientAdminStore>(clients);
+                    s.AddSingleton<IClientAdminStore>(Clients);
                     s.AddSingleton<IAccountPasswordHasher>(new PrefixPasswordHasher());
                     s.AddSingleton<IActivationTokenStore>(tokens);
                     s.AddSingleton<IEmailOutboxStore>(Outbox);

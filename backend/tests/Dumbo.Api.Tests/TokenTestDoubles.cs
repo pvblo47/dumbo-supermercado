@@ -19,6 +19,13 @@ internal sealed class MutableClock(DateTimeOffset start) : TimeProvider
 /// <summary>Almacén de enlaces en memoria con las mismas reglas que el real (vencer, un solo uso).</summary>
 internal sealed class InMemoryTokenStore(FakeAccountLookup users) : IActivationTokenStore
 {
+    public Task ExpireAllAsync(Guid userId, DateTime now, CancellationToken cancellationToken)
+    {
+        foreach (var t in Tokens.Where(t => t.UserId == userId && !t.IsUsed && t.ExpiresAt > now))
+            t.ExpiresAt = now;
+        return Task.CompletedTask;
+    }
+    
     public List<ActivationToken> Tokens { get; } = [];
 
     public Task<ActivationToken?> FindByHashAsync(string tokenHash, CancellationToken cancellationToken)
